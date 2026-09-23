@@ -6,6 +6,9 @@ import { healthRouter } from './presentation/routes/health.route';
 import { authRouter } from './presentation/routes/auth.routes';
 import { tenantRouter } from './presentation/routes/tenant.routes';
 import propertyRouter from './presentation/routes/property.routes';
+import vehicleRouter from './presentation/routes/vehicle.routes';
+import marbeteRouter from './presentation/routes/marbete.routes';
+import gateRouter from './presentation/routes/gate.routes';
 import { errorHandler } from './presentation/middlewares/errorHandler';
 
 const app = express();
@@ -23,6 +26,9 @@ app.use('/health', healthRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/tenants', tenantRouter);
 app.use('/api/properties', propertyRouter);
+app.use('/api/vehicles', vehicleRouter);
+app.use('/api/marbetes', marbeteRouter);
+app.use('/api/gate', gateRouter);
 
 // Global Error Handler
 app.use(errorHandler);

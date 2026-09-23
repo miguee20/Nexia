@@ -62,14 +62,14 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 
 - [x] Implementar casos de uso de Propiedades (CRUD).
 - [x] Implementar asignación de Propietario e Inquilino a una Propiedad.
-- [ ] Implementar CRUD de Vehículos por Propiedad.
-- [ ] Implementar lógica de Marbetes (emisión, renovación, cancelación) condicionada a config del tenant.
-- [ ] Implementar validación de marbetes incluidos vs extras con generación de cargo automático.
+- [x] Implementar CRUD de Vehículos por Propiedad.
+- [x] Implementar lógica de Marbetes (emisión, renovación, cancelación) condicionada a config del tenant.
+- [x] Implementar validación de marbetes incluidos vs extras con generación de cargo automático.
 - [ ] Frontend: Dashboard del Admin con vista de Propiedades (tabla con filtros y búsqueda).
 - [ ] Frontend: Modal/formulario para crear/editar propiedad y asignar residente.
 - [ ] Frontend: Sección de vehículos y marbetes dentro del detalle de propiedad.
-- [ ] Validaciones Zod para todos los endpoints de esta fase.
-- [ ] Tests: Emisión de marbetes, límite de incluidos, cargo por extras.
+- [x] Validaciones Zod para todos los endpoints de esta fase.
+- [x] Tests: Emisión de marbetes, límite de incluidos, cargo por extras.
 
 ---
 
