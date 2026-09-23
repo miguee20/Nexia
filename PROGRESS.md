@@ -7,7 +7,7 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 ## Resumen Global de Avance
 
 - [x] **Fase 0: Infraestructura y Scaffolding (Cimientos)** (11 / 11 completadas)
-- [ ] **Fase 1: Autenticación, Tenants y Modelo Base** (1 / 11 completadas)
+- [ ] **Fase 1: Autenticación, Tenants y Modelo Base** (6 / 11 completadas)
 - [ ] **Fase 2: Propiedades, Residentes, Vehículos y Marbetes** (0 / 10 completadas)
 - [ ] **Fase 3: Módulo de Garita, Pases QR, Alertas de Delivery y Fallback** (0 / 17 completadas)
 - [ ] **Fase 4: Módulo Financiero** (0 / 11 completadas)
@@ -42,11 +42,11 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 - **Duración estimada:** 4-5 días.
 
 - [x] Diseñar y migrar el schema Prisma completo (todas las tablas del ERD).
-- [ ] Implementar hashing de passwords (bcrypt).
-- [ ] Implementar generación y verificación de JWT (access + refresh tokens).
-- [ ] Implementar middlewares: `authMiddleware`, `tenantMiddleware`, `rbacMiddleware`.
-- [ ] Implementar middleware global de manejo de errores.
-- [ ] Implementar `LoginUseCase` y `RefreshTokenUseCase`.
+- [x] Implementar hashing de passwords (bcrypt).
+- [x] Implementar generación y verificación de JWT (access + refresh tokens).
+- [x] Implementar middlewares: `authMiddleware`, `tenantMiddleware`, `rbacMiddleware`.
+- [x] Implementar middleware global de manejo de errores.
+- [x] Implementar `LoginUseCase` y `RefreshTokenUseCase`.
 - [ ] Implementar CRUD de Tenants (SuperAdmin): crear, listar, actualizar config.
 - [ ] Crear seed de datos de prueba (1 condominio, 1 admin, 2 residentes, 1 guardia).
 - [ ] Frontend: Página de Login funcional conectada al API.
