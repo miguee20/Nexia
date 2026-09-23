@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // ─── Output ──────────────────────────────────────────────────────────────
+    "outDir": "./dist",
+    "rootDir": "./src",
+
+    // ─── Path Aliases ─────────────────────────────────────────────────────────
+    "baseUrl": ".",
+    "paths": {
+      "@nexia/shared-types": ["../../packages/shared-types/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
+}

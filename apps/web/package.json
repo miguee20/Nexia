@@ -1,0 +1,16 @@
+{
+  "name": "@nexia/web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Nexia Web Application — Next.js 15 + Tailwind CSS + shadcn/ui",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "type-check": "tsc --noEmit",
+    "lint": "next lint",
+    "clean": "rimraf .next out"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

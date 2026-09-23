@@ -1,0 +1,14 @@
+{
+  "name": "@nexia/shared-types",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Nexia Shared TypeScript types, DTOs and enums consumed by api and web",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src --ext .ts",
+    "clean": "rimraf dist"
+  },
+  "devDependencies": {}
+}

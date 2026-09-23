@@ -6,7 +6,7 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 
 ## Resumen Global de Avance
 
-- [ ] **Fase 0: Infraestructura y Scaffolding (Cimientos)** (0 / 11 completadas)
+- [/] **Fase 0: Infraestructura y Scaffolding (Cimientos)** (5 / 11 completadas)
 - [ ] **Fase 1: Autenticación, Tenants y Modelo Base** (0 / 11 completadas)
 - [ ] **Fase 2: Propiedades, Residentes, Vehículos y Marbetes** (0 / 10 completadas)
 - [ ] **Fase 3: Módulo de Garita, Pases QR, Alertas de Delivery y Fallback** (0 / 17 completadas)
@@ -23,14 +23,14 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 - **Duración estimada:** 2-3 días.
 
 - [ ] Inicializar repositorio Git con `.gitignore`, `LICENSE`, `README.md` inicial.
-- [ ] Configurar Monorepo con npm workspaces (`apps/api`, `apps/web`, `packages/shared-types`).
-- [ ] Configurar TypeScript estricto en los 3 paquetes.
-- [ ] Configurar ESLint + Prettier con reglas compartidas.
+- [x] Configurar Monorepo con npm workspaces (`apps/api`, `apps/web`, `packages/shared-types`).
+- [x] Configurar TypeScript estricto en los 3 paquetes.
+- [x] Configurar ESLint + Prettier con reglas compartidas.
 - [ ] Configurar Express con estructura Clean Architecture (carpetas base con `index.ts`).
 - [ ] Configurar Prisma con PostgreSQL (schema inicial con modelo `Condominio`).
 - [ ] Crear `docker-compose.yml` que levante PostgreSQL 16.
 - [ ] Implementar endpoint `GET /health` que verifica conexión a BD.
-- [ ] Configurar variables de entorno con `.env.example`.
+- [x] Configurar variables de entorno con `.env.example`.
 - [ ] Configurar Next.js con Tailwind CSS y shadcn/ui (página de landing placeholder).
 - [ ] Verificar: `docker compose up` levanta BD + API funcional.
 
