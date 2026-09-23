@@ -7,6 +7,105 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum RolUsuario {
+  SUPERADMIN
+  ADMIN_CONDOMINIO
+  RESIDENTE
+  GUARDIA
+}
+
+enum TipoResidencia {
+  PROPIETARIO
+  INQUILINO
+}
+
+enum TipoPropiedad {
+  CASA
+  APARTAMENTO
+  LOTE
+  LOCAL_COMERCIAL
+}
+
+enum EstadoPropiedad {
+  OCUPADA
+  DESOCUPADA
+  EN_CONSTRUCCION
+}
+
+enum TipoVehiculo {
+  SEDAN
+  PICKUP
+  MOTO
+}
+
+enum EstadoMarbete {
+  ACTIVO
+  VENCIDO
+  CANCELADO
+}
+
+enum EstadoCuota {
+  PENDIENTE
+  PAGADA
+  VENCIDA
+  PARCIAL
+}
+
+enum EstadoPago {
+  PENDIENTE_REVISION
+  APROBADO
+  RECHAZADO
+}
+
+enum MotivoVisita {
+  VISITA_PERSONAL
+  SERVICIO_TECNICO
+  EVENTO
+}
+
+enum EstadoPase {
+  ACTIVO
+  UTILIZADO
+  EXPIRADO
+  CANCELADO
+}
+
+enum EstadoAlerta {
+  ACTIVA
+  COMPLETADA
+  EXPIRADA
+  CANCELADA
+}
+
+enum TipoRegistro {
+  ENTRADA_QR
+  SALIDA_QR
+  ENTRADA_MANUAL
+  SALIDA_MANUAL
+  DELIVERY
+  VERIFICACION_LLAMADA
+}
+
+enum EstadoAmenidad {
+  ACTIVA
+  EN_MANTENIMIENTO
+  DESHABILITADA
+}
+
+enum EstadoReserva {
+  PENDIENTE
+  CONFIRMADA
+  CANCELADA
+  RECHAZADA
+}
+
+enum TipoNotificacion {
+  SISTEMA
+  FINANZAS
+  GARITA
+  RESERVA
+}
+
 model Condominio {
   id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   nombre        String
@@ -16,4 +115,273 @@ model Condominio {
   activo        Boolean  @default(true)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  usuarios         Usuario[]
+  propiedades      Propiedad[]
+  vehiculos        Vehiculo[]
+  marbetes         Marbete[]
+  cuotas           Cuota[]
+  amenidades       Amenidad[]
+  reservas         Reserva[]
+  pasesVisita      PaseVisita[]
+  alertasDelivery  AlertaDelivery[]
+  registrosGarita  RegistroGarita[]
+  notificaciones   Notificacion[]
+}
+
+model Usuario {
+  id              String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  condominio_id   String          @db.Uuid
+  email           String
+  password_hash   String
+  nombre_completo String
+  telefono        String
+  rol             RolUsuario
+  tipo_residencia TipoResidencia?
+  datos_extra     Json?           @default("{}")
+  activo          Boolean         @default(true)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  condominio Condominio @relation(fields: [condominio_id], references: [id])
+
+  propiedadesPropietario Propiedad[] @relation("PropiedadPropietario")
+  propiedadesInquilino   Propiedad[] @relation("PropiedadInquilino")
+
+  pagos            Pago[]
+  pasesVisita      PaseVisita[]
+  alertasDelivery  AlertaDelivery[]
+  reservas         Reserva[]
+  notificaciones   Notificacion[]
+  registrosGuardia RegistroGarita[] @relation("RegistroGuardia")
+
+  @@unique([condominio_id, email])
+  @@index([condominio_id])
+}
+
+model Propiedad {
+  id             String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  condominio_id  String          @db.Uuid
+  identificador  String
+  tipo           TipoPropiedad
+  estado         EstadoPropiedad
+  propietario_id String?         @db.Uuid
+  inquilino_id   String?         @db.Uuid
+  area_m2        Decimal?        @db.Decimal(10, 2)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  condominio  Condominio @relation(fields: [condominio_id], references: [id])
+  propietario Usuario?   @relation("PropiedadPropietario", fields: [propietario_id], references: [id])
+  inquilino   Usuario?   @relation("PropiedadInquilino", fields: [inquilino_id], references: [id])
+
+  vehiculos       Vehiculo[]
+  cuotas          Cuota[]
+  marbetes        Marbete[]
+  pasesVisita     PaseVisita[]
+  alertasDelivery AlertaDelivery[]
+
+  @@unique([condominio_id, identificador])
+  @@index([condominio_id])
+}
+
+model Vehiculo {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  condominio_id String       @db.Uuid
+  propiedad_id  String       @db.Uuid
+  placa         String
+  marca         String
+  color         String
+  modelo        String?
+  tipo          TipoVehiculo
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  condominio Condominio @relation(fields: [condominio_id], references: [id])
+  propiedad  Propiedad  @relation(fields: [propiedad_id], references: [id])
+  marbetes   Marbete[]
+
+  @@unique([condominio_id, placa])
+  @@index([condominio_id])
+}
+
+model Marbete {
+  id                String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  condominio_id     String        @db.Uuid
+  propiedad_id      String        @db.Uuid
+  vehiculo_id       String        @db.Uuid
+  codigo            String
+  fecha_emision     DateTime
+  fecha_vencimiento DateTime
+  es_extra          Boolean       @default(false)
+  estado            EstadoMarbete @default(ACTIVO)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  condominio Condominio @relation(fields: [condominio_id], references: [id])
+  propiedad  Propiedad  @relation(fields: [propiedad_id], references: [id])
+  vehiculo   Vehiculo   @relation(fields: [vehiculo_id], references: [id])
+
+  @@unique([condominio_id, codigo])
+  @@index([condominio_id])
+}
+
+model Cuota {
+  id                String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  condominio_id     String      @db.Uuid
+  propiedad_id      String      @db.Uuid
+  concepto          String
+  monto_original    Decimal     @db.Decimal(10, 2)
+  monto_recargo     Decimal     @default(0) @db.Decimal(10, 2)
+  fecha_emision     DateTime
+  fecha_vencimiento DateTime
+  estado            EstadoCuota @default(PENDIENTE)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  condominio Condominio @relation(fields: [condominio_id], references: [id])
+  propiedad  Propiedad  @relation(fields: [propiedad_id], references: [id])
+  pagos      Pago[]
+
+  @@index([condominio_id])
+}
+
+model Pago {
+  id                  String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  cuota_id            String     @db.Uuid
+  residente_id        String     @db.Uuid
+  monto               Decimal    @db.Decimal(10, 2)
+  referencia_bancaria String?
+  comprobante_url     String?
+  estado              EstadoPago @default(PENDIENTE_REVISION)
+  motivo_rechazo      String?
+  fecha_pago          DateTime
+  fecha_revision      DateTime?
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+
+  cuota     Cuota   @relation(fields: [cuota_id], references: [id])
+  residente Usuario @relation(fields: [residente_id], references: [id])
+}
+
+model PaseVisita {
+  id               String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  condominio_id    String       @db.Uuid
+  residente_id     String       @db.Uuid
+  propiedad_id     String       @db.Uuid
+  nombre_visitante String
+  motivo           MotivoVisita
+  qr_token         String       @unique
+  fecha_creacion   DateTime     @default(now())
+  fecha_expiracion DateTime
+  estado           EstadoPase   @default(ACTIVO)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  condominio      Condominio       @relation(fields: [condominio_id], references: [id])
+  residente       Usuario          @relation(fields: [residente_id], references: [id])
+  propiedad       Propiedad        @relation(fields: [propiedad_id], references: [id])
+  registrosGarita RegistroGarita[]
+
+  @@index([condominio_id])
+}
+
+model AlertaDelivery {
+  id                String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  condominio_id     String       @db.Uuid
+  residente_id      String       @db.Uuid
+  propiedad_id      String       @db.Uuid
+  descripcion       String
+  nombre_repartidor String?
+  fecha_creacion    DateTime     @default(now())
+  fecha_expiracion  DateTime
+  estado            EstadoAlerta @default(ACTIVA)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  condominio      Condominio       @relation(fields: [condominio_id], references: [id])
+  residente       Usuario          @relation(fields: [residente_id], references: [id])
+  propiedad       Propiedad        @relation(fields: [propiedad_id], references: [id])
+  registrosGarita RegistroGarita[]
+
+  @@index([condominio_id])
+}
+
+model RegistroGarita {
+  id                 String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  condominio_id      String       @db.Uuid
+  pase_id            String?      @db.Uuid
+  alerta_delivery_id String?      @db.Uuid
+  guardia_id         String       @db.Uuid
+  nombre_visitante   String?
+  placa_vehiculo     String?
+  tipo_registro      TipoRegistro
+  entrada            DateTime?
+  salida             DateTime?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  condominio      Condominio      @relation(fields: [condominio_id], references: [id])
+  pase            PaseVisita?     @relation(fields: [pase_id], references: [id])
+  alerta_delivery AlertaDelivery? @relation(fields: [alerta_delivery_id], references: [id])
+  guardia         Usuario         @relation("RegistroGuardia", fields: [guardia_id], references: [id])
+
+  @@index([condominio_id])
+}
+
+model Amenidad {
+  id                        String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  condominio_id             String         @db.Uuid
+  nombre                    String
+  descripcion               String
+  requiere_reserva          Boolean        @default(true)
+  anticipacion_minima_horas Int            @default(0)
+  aforo_maximo              Int?
+  costo_adicional           Decimal?       @db.Decimal(10, 2)
+  horario_disponible        Json           @default("{}")
+  estado                    EstadoAmenidad @default(ACTIVA)
+  createdAt                 DateTime       @default(now())
+  updatedAt                 DateTime       @updatedAt
+
+  condominio Condominio @relation(fields: [condominio_id], references: [id])
+  reservas   Reserva[]
+
+  @@index([condominio_id])
+}
+
+model Reserva {
+  id            String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  amenidad_id   String        @db.Uuid
+  residente_id  String        @db.Uuid
+  condominio_id String        @db.Uuid
+  fecha         DateTime      @db.Date
+  hora_inicio   DateTime      @db.Time
+  hora_fin      DateTime      @db.Time
+  estado        EstadoReserva @default(PENDIENTE)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  amenidad   Amenidad   @relation(fields: [amenidad_id], references: [id])
+  residente  Usuario    @relation(fields: [residente_id], references: [id])
+  condominio Condominio @relation(fields: [condominio_id], references: [id])
+
+  @@index([condominio_id])
+}
+
+model Notificacion {
+  id            String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuario_id    String           @db.Uuid
+  condominio_id String           @db.Uuid
+  titulo        String
+  mensaje       String
+  tipo          TipoNotificacion
+  leida         Boolean          @default(false)
+  fecha         DateTime         @default(now())
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  usuario    Usuario    @relation(fields: [usuario_id], references: [id])
+  condominio Condominio @relation(fields: [condominio_id], references: [id])
+
+  @@index([condominio_id])
 }

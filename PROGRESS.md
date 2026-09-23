@@ -7,7 +7,7 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 ## Resumen Global de Avance
 
 - [x] **Fase 0: Infraestructura y Scaffolding (Cimientos)** (11 / 11 completadas)
-- [ ] **Fase 1: Autenticación, Tenants y Modelo Base** (0 / 11 completadas)
+- [ ] **Fase 1: Autenticación, Tenants y Modelo Base** (1 / 11 completadas)
 - [ ] **Fase 2: Propiedades, Residentes, Vehículos y Marbetes** (0 / 10 completadas)
 - [ ] **Fase 3: Módulo de Garita, Pases QR, Alertas de Delivery y Fallback** (0 / 17 completadas)
 - [ ] **Fase 4: Módulo Financiero** (0 / 11 completadas)
@@ -41,7 +41,7 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 - **Entregable:** Sistema de login funcional con JWT, creación y configuración dinámica de tenants por SuperAdmin, y modelo de datos base migrado y sembrado con datos de prueba.
 - **Duración estimada:** 4-5 días.
 
-- [ ] Diseñar y migrar el schema Prisma completo (todas las tablas del ERD).
+- [x] Diseñar y migrar el schema Prisma completo (todas las tablas del ERD).
 - [ ] Implementar hashing de passwords (bcrypt).
 - [ ] Implementar generación y verificación de JWT (access + refresh tokens).
 - [ ] Implementar middlewares: `authMiddleware`, `tenantMiddleware`, `rbacMiddleware`.
