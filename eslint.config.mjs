@@ -30,13 +30,14 @@ export default [
         "error",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
-      "@typescript-eslint/explicit-function-return-type": "warn",
-      "@typescript-eslint/explicit-module-boundary-types": "warn",
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/explicit-module-boundary-types": "off",
       "@typescript-eslint/consistent-type-imports": [
         "error",
         { prefer: "type-imports" },
       ],
       "@typescript-eslint/no-non-null-assertion": "error",
+      "no-undef": "off",
 
       // ── Import ordering ───────────────────────────────────────────────────
       "import/order": [

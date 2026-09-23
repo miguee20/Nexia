@@ -9,7 +9,10 @@
     "baseUrl": ".",
     "paths": {
       "@nexia/shared-types": ["../../packages/shared-types/src/index.ts"]
-    }
+    },
+    
+    // ─── Types ───────────────────────────────────────────────────────────────
+    "types": ["node"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
