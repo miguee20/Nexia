@@ -5,6 +5,7 @@ import { env } from './config/env';
 import { healthRouter } from './presentation/routes/health.route';
 import { authRouter } from './presentation/routes/auth.routes';
 import { tenantRouter } from './presentation/routes/tenant.routes';
+import propertyRouter from './presentation/routes/property.routes';
 import { errorHandler } from './presentation/middlewares/errorHandler';
 
 const app = express();
@@ -21,6 +22,7 @@ app.use(cookieParser());
 app.use('/health', healthRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/tenants', tenantRouter);
+app.use('/api/properties', propertyRouter);
 
 // Global Error Handler
 app.use(errorHandler);

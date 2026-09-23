@@ -60,8 +60,8 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 - **Entregable:** El Administrador puede gestionar propiedades, asignar residentes, registrar vehículos y (si el módulo está activo) administrar y renovar marbetes con cálculo de cobros extras.
 - **Duración estimada:** 4-5 días.
 
-- [ ] Implementar casos de uso de Propiedades (CRUD).
-- [ ] Implementar asignación de Propietario e Inquilino a una Propiedad.
+- [x] Implementar casos de uso de Propiedades (CRUD).
+- [x] Implementar asignación de Propietario e Inquilino a una Propiedad.
 - [ ] Implementar CRUD de Vehículos por Propiedad.
 - [ ] Implementar lógica de Marbetes (emisión, renovación, cancelación) condicionada a config del tenant.
 - [ ] Implementar validación de marbetes incluidos vs extras con generación de cargo automático.
