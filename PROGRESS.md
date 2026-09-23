@@ -7,7 +7,7 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 ## Resumen Global de Avance
 
 - [x] **Fase 0: Infraestructura y Scaffolding (Cimientos)** (11 / 11 completadas)
-- [ ] **Fase 1: Autenticación, Tenants y Modelo Base** (6 / 11 completadas)
+- [ ] **Fase 1: Autenticación, Tenants y Modelo Base** (9 / 11 completadas)
 - [ ] **Fase 2: Propiedades, Residentes, Vehículos y Marbetes** (0 / 10 completadas)
 - [ ] **Fase 3: Módulo de Garita, Pases QR, Alertas de Delivery y Fallback** (0 / 17 completadas)
 - [ ] **Fase 4: Módulo Financiero** (0 / 11 completadas)
@@ -47,11 +47,11 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 - [x] Implementar middlewares: `authMiddleware`, `tenantMiddleware`, `rbacMiddleware`.
 - [x] Implementar middleware global de manejo de errores.
 - [x] Implementar `LoginUseCase` y `RefreshTokenUseCase`.
-- [ ] Implementar CRUD de Tenants (SuperAdmin): crear, listar, actualizar config.
-- [ ] Crear seed de datos de prueba (1 condominio, 1 admin, 2 residentes, 1 guardia).
+- [x] Implementar CRUD de Tenants (SuperAdmin): crear, listar, actualizar config.
+- [x] Crear seed de datos de prueba (1 condominio, 1 admin, 2 residentes, 1 guardia).
 - [ ] Frontend: Página de Login funcional conectada al API.
 - [ ] Frontend: Layout base con Sidebar (varía según rol del usuario autenticado).
-- [ ] Tests unitarios: Login, validación de JWT, middleware de tenant.
+- [x] Tests unitarios: Login, validación de JWT, middleware de tenant.
 
 ---
 
