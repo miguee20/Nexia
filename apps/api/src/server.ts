@@ -9,6 +9,8 @@ import propertyRouter from './presentation/routes/property.routes';
 import vehicleRouter from './presentation/routes/vehicle.routes';
 import marbeteRouter from './presentation/routes/marbete.routes';
 import gateRouter from './presentation/routes/gate.routes';
+import visitRouter from './presentation/routes/visit.routes';
+import deliveryRouter from './presentation/routes/delivery.routes';
 import userRouter from './presentation/routes/user.routes';
 import { errorHandler } from './presentation/middlewares/errorHandler';
 
@@ -30,6 +32,8 @@ app.use('/api/properties', propertyRouter);
 app.use('/api/vehicles', vehicleRouter);
 app.use('/api/marbetes', marbeteRouter);
 app.use('/api/gate', gateRouter);
+app.use('/api/visits', visitRouter);
+app.use('/api/deliveries', deliveryRouter);
 app.use('/api/users', userRouter);
 
 // Global Error Handler
