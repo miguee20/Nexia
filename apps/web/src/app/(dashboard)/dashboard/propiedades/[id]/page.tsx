@@ -99,7 +99,7 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
 
   return (
     <div className="p-6 space-y-6">
-      <Button variant="ghost" onClick={() => router.push('/propiedades')} className="mb-4">
+      <Button variant="ghost" onClick={() => router.push('/dashboard/propiedades')} className="mb-4">
         <ArrowLeft className="w-4 h-4 mr-2" /> Volver a Propiedades
       </Button>
 
