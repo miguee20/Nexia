@@ -52,6 +52,11 @@ export const propertyService = {
     return res.data;
   },
 
+  listAvailableResidents: async () => {
+    const res = await api.get('/users/residents');
+    return res.data;
+  },
+
   issueMarbete: async (vehicleId: string, periodo: string) => {
     const res = await api.post(`/vehicles/${vehicleId}/marbetes`, { periodo });
     return res.data;

@@ -25,6 +25,11 @@ const vehicleSchema = z.object({
   tipo: z.enum(['SEDAN', 'PICKUP', 'MOTO']),
 });
 
+const assignSchema = z.object({
+  userId: z.string().min(1, 'Debe seleccionar un usuario'),
+  tipo_residencia: z.enum(['PROPIETARIO', 'INQUILINO']),
+});
+
 export default function PropertyDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
   const { id } = resolvedParams;
@@ -36,6 +41,9 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
   const [loading, setLoading] = useState(true);
   const [isVehicleOpen, setIsVehicleOpen] = useState(false);
 
+  const [isAssignOpen, setIsAssignOpen] = useState(false);
+  const [availableResidents, setAvailableResidents] = useState<any[]>([]);
+
   const vehicleForm = useForm<z.infer<typeof vehicleSchema>>({
     resolver: zodResolver(vehicleSchema),
     defaultValues: { placa: '', marca: '', color: '', modelo: '', tipo: 'SEDAN' },
@@ -44,14 +52,16 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
   const loadData = async () => {
     setLoading(true);
     try {
-      const [propRes, vehRes, marbRes] = await Promise.all([
+      const [propRes, vehRes, marbRes, resRes] = await Promise.all([
         propertyService.getById(id),
         propertyService.listVehicles(id),
         propertyService.listMarbetes(id),
+        propertyService.listAvailableResidents(),
       ]);
       setProperty(propRes);
       setVehicles(vehRes);
       setMarbetes(marbRes);
+      setAvailableResidents(resRes);
     } catch (error) {
       console.error(error);
     } finally {
@@ -62,6 +72,23 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
   useEffect(() => {
     loadData();
   }, [id]);
+
+  const assignForm = useForm<z.infer<typeof assignSchema>>({
+    resolver: zodResolver(assignSchema),
+    defaultValues: { userId: '', tipo_residencia: 'INQUILINO' },
+  });
+
+  const onSubmitAssign = async (values: z.infer<typeof assignSchema>) => {
+    try {
+      await propertyService.assignResident(id, values.userId, values.tipo_residencia);
+      setIsAssignOpen(false);
+      assignForm.reset();
+      loadData();
+    } catch (error: any) {
+      console.error(error);
+      alert(error?.response?.data?.message || 'Error al asignar residente');
+    }
+  };
 
   const onSubmitVehicle = async (values: z.infer<typeof vehicleSchema>) => {
     try {
@@ -120,6 +147,49 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
         </TabsList>
         
         <TabsContent value="general" className="space-y-4 mt-4">
+          <div className="flex justify-end">
+            <Dialog open={isAssignOpen} onOpenChange={setIsAssignOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline"><Plus className="w-4 h-4 mr-2" /> Asignar Residente</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader><DialogTitle>Asignar Residente</DialogTitle></DialogHeader>
+                <Form {...assignForm}>
+                  <form onSubmit={assignForm.handleSubmit(onSubmitAssign)} className="space-y-4">
+                    <FormField control={assignForm.control} name="tipo_residencia" render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Rol en Propiedad</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl><SelectTrigger><SelectValue placeholder="Seleccione rol" /></SelectTrigger></FormControl>
+                          <SelectContent>
+                            <SelectItem value="PROPIETARIO">Propietario</SelectItem>
+                            <SelectItem value="INQUILINO">Inquilino</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <FormField control={assignForm.control} name="userId" render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Usuario (Residente)</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl><SelectTrigger><SelectValue placeholder="Seleccione un residente" /></SelectTrigger></FormControl>
+                          <SelectContent>
+                            {availableResidents.map(res => (
+                              <SelectItem key={res.id} value={res.id}>{res.nombre_completo} ({res.email})</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <Button type="submit" className="w-full">Asignar a Propiedad</Button>
+                  </form>
+                </Form>
+              </DialogContent>
+            </Dialog>
+          </div>
+
           <Card>
             <CardHeader><CardTitle>Propietario</CardTitle></CardHeader>
             <CardContent>
