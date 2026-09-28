@@ -80,22 +80,22 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 
 - [x] Implementar `GenerateVisitPassUseCase` (genera token UUID + firma HMAC + QR).
 - [x] Implementar `ValidateQRUseCase` (verifica firma, vigencia, estado de morosidad del anfitrión).
-- [ ] Implementar `RegisterEntryUseCase` y `RegisterExitUseCase`.
-- [ ] Implementar `ManualEntryUseCase` (registro sin QR).
+- [x] Implementar `RegisterEntryUseCase` y `RegisterExitUseCase`.
+- [x] Implementar `ManualEntryUseCase` (registro sin QR).
 - [x] Implementar `CreateDeliveryAlertUseCase` (crea alerta que aparece en el panel del guardia, con vigencia configurable).
 - [x] Implementar listado de alertas de delivery activas para el guardia.
-- [ ] Implementar `RegisterDeliveryUseCase` (guardia registra ingreso de delivery desde la alerta).
-- [ ] Implementar `GetPropertyContactUseCase` (guardia consulta teléfono de la propiedad).
-- [ ] Implementar `RegisterCallVerificationUseCase` (guardia registra ingreso verificado por llamada telefónica).
-- [ ] Implementar consulta de placas autorizadas y código de marbete.
-- [ ] Implementar bitácora con filtros y exportación CSV (incluye tipos `DELIVERY` y `VERIFICACION_LLAMADA`).
+- [x] Implementar `RegisterDeliveryUseCase` (guardia registra ingreso de delivery desde la alerta).
+- [x] Implementar `GetPropertyContactUseCase` (guardia consulta teléfono de la propiedad).
+- [x] Implementar `RegisterCallVerificationUseCase` (guardia registra ingreso verificado por llamada telefónica).
+- [x] Implementar consulta de placas autorizadas y código de marbete.
+- [x] Implementar bitácora con filtros y exportación CSV (incluye tipos `DELIVERY` y `VERIFICACION_LLAMADA`).
 - [ ] Frontend (Residente): Pantalla para generar pase QR con formulario simple, ver mis pases activos, compartir QR como imagen.
 - [ ] Frontend (Residente): Botón "Espero un delivery" con formulario simple (descripción + repartidor opcional).
 - [ ] Frontend (Garita): Vista dedicada con escáner de cámara, resultado visual VERDE/ROJO/AMARILLO, botones grandes para registrar entrada/salida.
 - [ ] Frontend (Garita): Sección "Deliveries Esperados" con alertas activas y botón "Registrar Delivery".
 - [ ] Frontend (Garita): Botón "Verificar con Residente" que muestra teléfono de la propiedad y permite registrar ingreso por llamada.
 - [ ] Frontend (Admin): Vista de bitácora con filtros.
-- [ ] Tests: Validación de QR expirado, QR ya usado, QR de moroso, alerta de delivery expirada, registro por llamada.
+- [x] Tests: Validación de QR expirado, QR ya usado, QR de moroso, alerta de delivery expirada, registro por llamada.
 
 ---
 
