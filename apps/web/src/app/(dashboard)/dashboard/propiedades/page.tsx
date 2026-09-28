@@ -3,12 +3,11 @@
 import { useEffect, useState } from 'react';
 import { propertyService, PropertyFilters } from '@/services/property.service';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, Plus, Search, Eye } from 'lucide-react';
+import { MoreHorizontal, Plus, Search, Eye, Home, Car } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useForm } from 'react-hook-form';
@@ -76,8 +75,67 @@ export default function PropiedadesPage() {
     }
   };
 
+  // ---------- KPI computations (derived from already-loaded state, zero API calls) ----------
+  const totalProperties = properties.length;
+  const occupiedCount = properties.filter(p => p.estado === 'OCUPADA').length;
+  const occupancyRate = totalProperties > 0 ? Math.round((occupiedCount / totalProperties) * 100) : 0;
+  const totalVehicles = properties.reduce((acc: number, p: Record<string, unknown>) => acc + (Array.isArray(p.vehiculos) ? (p.vehiculos as unknown[]).length : 0), 0);
+
+  // ---------- Semantic status badge helper ----------
+  const statusBadge = (estado: string) => {
+    const map: Record<string, string> = {
+      OCUPADA: 'bg-emerald-50 text-emerald-700 border border-emerald-200/60',
+      ACTIVO: 'bg-emerald-50 text-emerald-700 border border-emerald-200/60',
+      DESOCUPADA: 'bg-zinc-100 text-zinc-600 border border-zinc-200',
+      EN_CONSTRUCCION: 'bg-amber-50 text-amber-700 border border-amber-200/60',
+      EN_MORA: 'bg-rose-50 text-rose-700 border border-rose-200/60',
+      VENCIDO: 'bg-rose-50 text-rose-700 border border-rose-200/60',
+    };
+    const cls = map[estado] || 'bg-zinc-100 text-zinc-600 border border-zinc-200';
+    return (
+      <span className={`inline-flex items-center font-medium text-xs px-2.5 py-0.5 rounded-full ${cls}`}>
+        {estado}
+      </span>
+    );
+  };
+
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
+      {/* ────── KPI Stat Cards ────── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-white p-4 rounded-xl border border-zinc-200/80 shadow-xs flex items-center gap-4">
+          <div className="h-10 w-10 rounded-lg bg-indigo-50 flex items-center justify-center">
+            <Home className="h-5 w-5 text-indigo-600" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold tracking-tight">{totalProperties}</p>
+            <p className="text-xs text-zinc-500">Total Propiedades</p>
+          </div>
+        </div>
+        <div className="bg-white p-4 rounded-xl border border-zinc-200/80 shadow-xs flex items-center gap-4">
+          <div className="h-10 w-10 rounded-lg bg-emerald-50 flex items-center justify-center">
+            <span className="text-emerald-600 font-bold text-sm">%</span>
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <p className="text-2xl font-bold tracking-tight">{occupancyRate}%</p>
+              <span className="inline-flex items-center bg-emerald-50 text-emerald-700 border border-emerald-200/60 font-medium text-[10px] px-1.5 py-0.5 rounded-full">
+                {occupiedCount}/{totalProperties}
+              </span>
+            </div>
+            <p className="text-xs text-zinc-500">Ocupación</p>
+          </div>
+        </div>
+        <div className="bg-white p-4 rounded-xl border border-zinc-200/80 shadow-xs flex items-center gap-4">
+          <div className="h-10 w-10 rounded-lg bg-sky-50 flex items-center justify-center">
+            <Car className="h-5 w-5 text-sky-600" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold tracking-tight">{totalVehicles}</p>
+            <p className="text-xs text-zinc-500">Vehículos Autorizados</p>
+          </div>
+        </div>
+      </div>
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Propiedades</h1>
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
@@ -202,9 +260,7 @@ export default function PropiedadesPage() {
                   <TableCell className="font-medium">{prop.identificador}</TableCell>
                   <TableCell>{prop.tipo}</TableCell>
                   <TableCell>
-                    <Badge variant={prop.estado === 'OCUPADA' ? 'default' : prop.estado === 'DESOCUPADA' ? 'secondary' : 'outline'}>
-                      {prop.estado}
-                    </Badge>
+                    {statusBadge(prop.estado)}
                   </TableCell>
                   <TableCell>{prop.propietario_id ? 'Asignado' : 'Sin asignar'}</TableCell>
                   <TableCell>{prop.inquilino_id ? 'Asignado' : 'Sin asignar'}</TableCell>

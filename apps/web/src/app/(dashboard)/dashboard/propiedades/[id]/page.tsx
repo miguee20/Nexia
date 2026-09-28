@@ -135,7 +135,19 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
           <h1 className="text-3xl font-bold">{property.identificador}</h1>
           <div className="flex gap-2 mt-2">
             <Badge variant="outline">{property.tipo}</Badge>
-            <Badge variant={property.estado === 'OCUPADA' ? 'default' : 'secondary'}>{property.estado}</Badge>
+            {(() => {
+              const estadoMap: Record<string, string> = {
+                OCUPADA: 'bg-emerald-50 text-emerald-700 border border-emerald-200/60',
+                DESOCUPADA: 'bg-zinc-100 text-zinc-600 border border-zinc-200',
+                EN_CONSTRUCCION: 'bg-amber-50 text-amber-700 border border-amber-200/60',
+              };
+              const cls = estadoMap[property.estado] || 'bg-zinc-100 text-zinc-600 border border-zinc-200';
+              return (
+                <span className={`inline-flex items-center font-medium text-xs px-2.5 py-0.5 rounded-full ${cls}`}>
+                  {property.estado}
+                </span>
+              );
+            })()}
           </div>
         </div>
       </div>
@@ -300,7 +312,7 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
                             <div className="flex flex-col gap-1 items-start">
                               <span className="text-sm font-semibold">{activeMarbete.codigo}</span>
                               <div className="flex gap-1">
-                                <Badge variant="default">Activo</Badge>
+                                <span className="inline-flex items-center font-medium text-xs px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60">Activo</span>
                                 {activeMarbete.es_extra ? <Badge variant="destructive">Extra</Badge> : <Badge variant="secondary">Incluido</Badge>}
                               </div>
                             </div>

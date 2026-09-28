@@ -71,9 +71,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-100 via-zinc-50 to-zinc-50 dark:from-zinc-900 dark:via-zinc-950 dark:to-zinc-950 px-4">
+    <div className="flex min-h-screen w-full items-center justify-center bg-zinc-50 px-4">
       <div className="w-full max-w-md space-y-6">
-        <Card className="border-zinc-200/60 shadow-xl shadow-zinc-950/5 dark:border-zinc-800">
+        <Card className="border border-zinc-200/80 shadow-xl shadow-zinc-900/5">
           <CardHeader className="space-y-2 pb-6 pt-8">
             <div className="flex justify-center mb-4">
               <div className="h-12 w-12 rounded-xl bg-indigo-600 flex items-center justify-center shadow-sm">
