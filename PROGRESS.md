@@ -94,7 +94,7 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 - [x] Frontend (Garita): Vista dedicada con escáner de cámara, resultado visual VERDE/ROJO/AMARILLO, botones grandes para registrar entrada/salida.
 - [x] Frontend (Garita): Sección "Deliveries Esperados" con alertas activas y botón "Registrar Delivery".
 - [x] Frontend (Garita): Botón "Verificar con Residente" que muestra teléfono de la propiedad y permite registrar ingreso por llamada.
-- [ ] Frontend (Admin): Vista de bitácora con filtros.
+- [x] Frontend (Admin): Vista de bitácora con filtros.
 - [x] Tests: Validación de QR expirado, QR ya usado, QR de moroso, alerta de delivery expirada, registro por llamada.
 
 ---

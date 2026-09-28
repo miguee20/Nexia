@@ -19,7 +19,8 @@ import {
   User as UserIcon,
   LogOut,
   LucideIcon,
-  ShieldCheck
+  ShieldCheck,
+  History
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -37,6 +38,7 @@ const MENU_ITEMS: RoleMenu = {
   SUPERADMIN: [
     { name: 'Condominios', href: '/sa/condominios', icon: Building2 },
     { name: 'Métricas Globales', href: '/sa/metricas', icon: BarChart3 },
+    { name: 'Bitácora de Garita', href: '/dashboard/bitacora', icon: History },
   ],
   ADMIN_CONDOMINIO: [
     { name: 'Propiedades', href: '/dashboard/propiedades', icon: Home },
@@ -44,6 +46,7 @@ const MENU_ITEMS: RoleMenu = {
     { name: 'Finanzas', href: '/dashboard/finanzas', icon: Wallet },
     { name: 'Marbetes', href: '/dashboard/marbetes', icon: Car },
     { name: 'Amenidades', href: '/dashboard/amenidades', icon: Palmtree },
+    { name: 'Bitácora de Garita', href: '/dashboard/bitacora', icon: History },
     { name: 'Consola Garita', href: '/garita', icon: ShieldCheck },
     { name: 'Configuración', href: '/dashboard/configuracion', icon: Settings },
   ],
