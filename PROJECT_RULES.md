@@ -50,6 +50,12 @@ La API REST (`apps/api`) utiliza **Express 4.x** estructurado de manera estricta
 - **Iconografía:** Lucide React.
 - **Consumo API:** Fetch nativo tipado o Axios estructurado con manejo de errores y estado tipado.
 
+### 1.4.1 Directrices de UI y Sistema de Diseño
+- **Fondos:** `bg-zinc-50` para el canvas de trabajo, `bg-white` para cards y tablas.
+- **Jerarquía:** Tablas y listas siempre contenidas en cards con `border border-zinc-200 shadow-sm rounded-xl`.
+- **Acciones:** Evitar botones con colores saturados masivos para acciones destructivas en tablas; usar variantes `outline`, `ghost` o dropdowns contextuales.
+- **Layout Shell:** Toda vista autenticada debe respetar el contenedor de `max-w-7xl mx-auto p-6 md:p-8`.
+
 ### 1.5 Persistencia y Multi-Tenancy
 - **ORM:** Prisma 6.x.
 - **Motor de BD:** PostgreSQL 16 ejecutándose en contenedor Docker (`docker-compose.yml`).

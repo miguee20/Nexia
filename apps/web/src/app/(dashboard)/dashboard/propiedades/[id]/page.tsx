@@ -271,59 +271,61 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
             </Dialog>
           </div>
 
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Placa</TableHead>
-                <TableHead>Marca / Modelo</TableHead>
-                <TableHead>Color</TableHead>
-                <TableHead>Tipo</TableHead>
-                <TableHead>Marbete Asociado</TableHead>
-                <TableHead>Acciones</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {vehicles.length === 0 ? (
-                <TableRow><TableCell colSpan={6} className="text-center py-4">No hay vehículos registrados.</TableCell></TableRow>
-              ) : (
-                vehicles.map((v) => {
-                  const activeMarbete = marbetes.find(m => m.vehiculo_id === v.id && m.estado === 'ACTIVO');
-                  return (
-                    <TableRow key={v.id}>
-                      <TableCell className="font-medium">{v.placa}</TableCell>
-                      <TableCell>{v.marca} {v.modelo ? `(${v.modelo})` : ''}</TableCell>
-                      <TableCell>{v.color}</TableCell>
-                      <TableCell>{v.tipo}</TableCell>
-                      <TableCell>
-                        {activeMarbete ? (
-                          <div className="flex flex-col gap-1 items-start">
-                            <span className="text-sm font-semibold">{activeMarbete.codigo}</span>
-                            <div className="flex gap-1">
-                              <Badge variant="default">Activo</Badge>
-                              {activeMarbete.es_extra ? <Badge variant="destructive">Extra</Badge> : <Badge variant="secondary">Incluido</Badge>}
+          <div className="border border-zinc-200 bg-white dark:bg-zinc-950 dark:border-zinc-800 rounded-xl shadow-sm overflow-hidden mt-4">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Placa</TableHead>
+                  <TableHead>Marca / Modelo</TableHead>
+                  <TableHead>Color</TableHead>
+                  <TableHead>Tipo</TableHead>
+                  <TableHead>Marbete Asociado</TableHead>
+                  <TableHead>Acciones</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {vehicles.length === 0 ? (
+                  <TableRow><TableCell colSpan={6} className="text-center py-4 text-zinc-500">No hay vehículos registrados.</TableCell></TableRow>
+                ) : (
+                  vehicles.map((v) => {
+                    const activeMarbete = marbetes.find(m => m.vehiculo_id === v.id && m.estado === 'ACTIVO');
+                    return (
+                      <TableRow key={v.id}>
+                        <TableCell className="font-medium">{v.placa}</TableCell>
+                        <TableCell>{v.marca} {v.modelo ? `(${v.modelo})` : ''}</TableCell>
+                        <TableCell>{v.color}</TableCell>
+                        <TableCell>{v.tipo}</TableCell>
+                        <TableCell>
+                          {activeMarbete ? (
+                            <div className="flex flex-col gap-1 items-start">
+                              <span className="text-sm font-semibold">{activeMarbete.codigo}</span>
+                              <div className="flex gap-1">
+                                <Badge variant="default">Activo</Badge>
+                                {activeMarbete.es_extra ? <Badge variant="destructive">Extra</Badge> : <Badge variant="secondary">Incluido</Badge>}
+                              </div>
                             </div>
-                          </div>
-                        ) : (
-                          <span className="text-sm text-gray-500">Sin marbete activo</span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {activeMarbete ? (
-                          <Button variant="destructive" size="sm" onClick={() => handleCancelMarbete(activeMarbete.id)}>
-                            <Ban className="w-4 h-4 mr-1" /> Cancelar
-                          </Button>
-                        ) : (
-                          <Button variant="outline" size="sm" onClick={() => handleIssueMarbete(v.id)}>
-                            <Tag className="w-4 h-4 mr-1" /> Emitir
-                          </Button>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
-              )}
-            </TableBody>
-          </Table>
+                          ) : (
+                            <span className="text-sm text-zinc-500">Sin marbete activo</span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {activeMarbete ? (
+                            <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 dark:border-red-900/50 dark:hover:bg-red-950/50" onClick={() => handleCancelMarbete(activeMarbete.id)}>
+                              <Ban className="w-4 h-4 mr-1" /> Cancelar
+                            </Button>
+                          ) : (
+                            <Button variant="outline" size="sm" onClick={() => handleIssueMarbete(v.id)}>
+                              <Tag className="w-4 h-4 mr-1" /> Emitir
+                            </Button>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </TabsContent>
       </Tabs>
     </div>

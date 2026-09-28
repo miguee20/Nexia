@@ -77,13 +77,13 @@ export function Sidebar() {
   };
 
   return (
-    <div className="flex flex-col w-64 h-screen bg-zinc-900 text-zinc-100 border-r border-zinc-800">
-      <div className="p-6 flex items-center gap-2 font-bold text-2xl">
+    <div className="flex flex-col w-64 h-screen bg-zinc-950 text-zinc-100 border-r border-zinc-800">
+      <div className="p-6 flex items-center gap-2 font-bold text-2xl tracking-tight">
         <Building2 className="h-6 w-6 text-indigo-500" />
         Nexia
       </div>
 
-      <nav className="flex-1 px-4 space-y-2 overflow-y-auto">
+      <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href);
           return (
@@ -91,10 +91,10 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
+                "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm font-medium",
                 isActive 
-                  ? "bg-indigo-600 text-white font-medium" 
-                  : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800"
+                  ? "bg-zinc-800 text-white shadow-sm" 
+                  : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/60"
               )}
             >
               <item.icon className="h-5 w-5" />

@@ -179,7 +179,7 @@ export default function PropiedadesPage() {
         </Select>
       </div>
 
-      <div className="border rounded-md">
+      <div className="border border-zinc-200 bg-white dark:bg-zinc-950 dark:border-zinc-800 rounded-xl shadow-sm overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
