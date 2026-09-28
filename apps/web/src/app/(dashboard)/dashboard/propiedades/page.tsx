@@ -70,8 +70,9 @@ export default function PropiedadesPage() {
       setIsCreateOpen(false);
       form.reset();
       loadProperties();
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      alert(error?.response?.data?.message || 'Error al crear la propiedad');
     }
   };
 

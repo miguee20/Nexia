@@ -11,8 +11,7 @@ export const tenantMiddleware = (req: AuthenticatedRequest, _res: Response, next
     // Usually, the requested tenant id comes from a header like x-tenant-id or from the route params
     // For Nexia, as per PRD: "Ningún endpoint devuelve datos fuera del tenant del usuario autenticado"
     // So we just ensure the user has a condominioId and we use it as context.
-    
-    const requestedTenantId = req.headers['x-tenant-id'] || req.params.condominioId || req.body.condominio_id;
+    const requestedTenantId = req.headers['x-tenant-id'] || req.params.condominioId || req.body?.condominio_id;
 
     // SuperAdmin might not be bound to a single tenant in some contexts, but let's stick to the rule for now:
     if (req.user.rol !== 'SUPERADMIN' && requestedTenantId && requestedTenantId !== req.user.condominioId) {
