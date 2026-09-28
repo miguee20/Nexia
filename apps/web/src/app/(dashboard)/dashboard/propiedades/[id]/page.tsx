@@ -147,7 +147,8 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
         </TabsList>
         
         <TabsContent value="general" className="space-y-4 mt-4">
-          <div className="flex justify-end">
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="text-xl font-semibold">Residentes Asignados</h2>
             <Dialog open={isAssignOpen} onOpenChange={setIsAssignOpen}>
               <DialogTrigger asChild>
                 <Button variant="outline"><Plus className="w-4 h-4 mr-2" /> Asignar Residente</Button>
