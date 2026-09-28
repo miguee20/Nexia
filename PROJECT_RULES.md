@@ -89,6 +89,25 @@ La API REST (`apps/api`) utiliza **Express 4.x** estructurado de manera estricta
   - `feat(shared-types): define user and tenant DTOs`
   - `fix(gate): validate expiration on qr visitor pass`
 
+### 2.3 Estrategia de Ramas (GitHub Flow) y Protocolo de Ejecución
+
+1. **Estado de `main`:**
+   - La rama `main` es el tronco estable de producción. Siempre debe compilar con `npm run type-check`, pasar tests y permanecer limpia.
+
+2. **Creación Automática de Ramas por el Agente:**
+   - Antes de escribir o modificar código al inicio de cualquier fase, bloque de trabajo o refactor, el agente debe verificar que se encuentre en `main` actualizado y ejecutar en consola la creación y cambio a la rama correspondiente.
+   - Nomenclatura estricta de ramas:
+     * `feat/fase-X-<modulo>` (ej. `feat/fase-3-garita-backend`)
+     * `refactor/web-<descripcion>`
+     * `fix/<modulo>-<descripcion>`
+
+3. **Commits Exclusivos del Desarrollador (Prohibición al Agente):**
+   - El agente tiene **terminantemente prohibido ejecutar `git commit`** por su cuenta, salvo instrucción explícita del usuario.
+   - Tras completar las tareas asignadas y validar que `npm run type-check` (y los tests respectivos) pasen con 0 errores, el agente debe limitar su acción a proporcionar el comando `git commit -m "..."` sugerido en inglés bajo Conventional Commits para que el desarrollador lo ejecute manualmente desde su terminal CMD.
+
+4. **Integración (Merge):**
+   - Al finalizar y verificar un bloque o fase completa en la rama activa, el agente sugerirá los comandos de integración hacia `main` mediante merge sin fast-forward (`git merge --no-ff`) para mantener la trazabilidad en el historial.
+
 ---
 
 ## 3. Flujo de Ejecución y Calidad
