@@ -4,6 +4,7 @@ export interface VisitPassEntity {
   residente_id: string;
   propiedad_id: string;
   nombre_visitante: string;
+  placa_vehiculo: string | null;
   motivo: string;
   qr_token: string;
   fecha_creacion: Date;

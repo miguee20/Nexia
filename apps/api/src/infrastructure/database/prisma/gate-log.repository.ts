@@ -72,8 +72,8 @@ export class PrismaGateLogRepository implements IGateLogRepository {
         orderBy: { entrada: 'desc' },
         include: {
           guardia: { select: { nombre_completo: true } },
-          pase: { select: { propiedad: { select: { identificador: true } } } },
-          alerta_delivery: { select: { propiedad: { select: { identificador: true } } } },
+          pase: { select: { nombre_visitante: true, placa_vehiculo: true, propiedad: { select: { identificador: true } } } },
+          alerta_delivery: { select: { nombre_repartidor: true, propiedad: { select: { identificador: true } } } },
         }
       })
     ]);
@@ -89,8 +89,8 @@ export class PrismaGateLogRepository implements IGateLogRepository {
       orderBy: { entrada: 'desc' },
       include: {
         guardia: { select: { nombre_completo: true } },
-        pase: { select: { propiedad: { select: { identificador: true } } } },
-        alerta_delivery: { select: { propiedad: { select: { identificador: true } } } },
+        pase: { select: { nombre_visitante: true, placa_vehiculo: true, propiedad: { select: { identificador: true } } } },
+        alerta_delivery: { select: { nombre_repartidor: true, propiedad: { select: { identificador: true } } } },
       }
     });
 

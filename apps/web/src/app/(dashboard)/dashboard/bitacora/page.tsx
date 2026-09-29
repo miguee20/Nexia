@@ -19,8 +19,8 @@ type GateLog = {
   placa_vehiculo: string | null;
   tipo_registro: string;
   guardia: { nombre_completo: string };
-  pase?: { propiedad: { identificador: string } };
-  alerta_delivery?: { propiedad: { identificador: string } };
+  pase?: { nombre_visitante?: string; placa_vehiculo?: string | null; propiedad: { identificador: string } };
+  alerta_delivery?: { nombre_repartidor?: string; propiedad: { identificador: string } };
 };
 
 export default function BitacoraGaritaPage() {
@@ -194,8 +194,8 @@ export default function BitacoraGaritaPage() {
                         {log.pase?.propiedad?.identificador || log.alerta_delivery?.propiedad?.identificador || '-'}
                       </TableCell>
                       <TableCell>
-                        <div className="text-sm">{log.nombre_visitante || 'Repartidor / Desconocido'}</div>
-                        {log.placa_vehiculo && <div className="text-xs text-zinc-500 flex items-center gap-1 mt-0.5"><Search className="w-3 h-3" /> {log.placa_vehiculo}</div>}
+                        <div className="text-sm">{log.nombre_visitante || log.pase?.nombre_visitante || log.alerta_delivery?.nombre_repartidor || 'Repartidor / Desconocido'}</div>
+                        {(log.placa_vehiculo || log.pase?.placa_vehiculo) && <div className="text-xs text-zinc-500 flex items-center gap-1 mt-0.5"><Search className="w-3 h-3" /> {log.placa_vehiculo || log.pase?.placa_vehiculo}</div>}
                       </TableCell>
                       <TableCell className="text-sm text-zinc-600">{log.guardia.nombre_completo}</TableCell>
                     </TableRow>

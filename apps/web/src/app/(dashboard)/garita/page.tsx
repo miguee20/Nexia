@@ -62,26 +62,31 @@ export default function GaritaConsolePage() {
     }
   };
 
-  const startCameraScan = async () => {
+  const startCameraScan = () => {
     setIsScanning(true);
     setScanResult(null);
-    try {
-      const scanner = new Html5Qrcode("qr-reader");
-      scannerRef.current = scanner;
-      await scanner.start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: { width: 250, height: 250 } },
-        (decodedText) => {
-          scanner.stop();
-          setIsScanning(false);
-          validateQR(decodedText);
-        },
-        () => {}
-      );
-    } catch (err) {
-      console.error("Camera error:", err);
-      setIsScanning(false);
-    }
+    
+    // Esperar al siguiente ciclo de renderizado para que el div 'qr-reader' exista en el DOM
+    setTimeout(async () => {
+      try {
+        const scanner = new Html5Qrcode("qr-reader");
+        scannerRef.current = scanner;
+        await scanner.start(
+          { facingMode: "environment" },
+          { fps: 10, qrbox: { width: 250, height: 250 } },
+          (decodedText) => {
+            scanner.stop().then(() => {
+              setIsScanning(false);
+              validateQR(decodedText);
+            }).catch(console.error);
+          },
+          () => {}
+        );
+      } catch (err) {
+        console.error("Camera error:", err);
+        setIsScanning(false);
+      }
+    }, 100);
   };
 
   const stopCameraScan = () => {
@@ -91,11 +96,13 @@ export default function GaritaConsolePage() {
     }
   };
 
+  const [successMessage, setSuccessMessage] = useState('');
+
   const registerEntry = async (paseId: string) => {
     try {
       await api.post('/gate/entries', { pase_id: paseId });
       setScanResult(null);
-      alert('Entrada registrada exitosamente');
+      setSuccessMessage('El ingreso del visitante se ha registrado exitosamente.');
     } catch (error) {
       alert('Error al registrar entrada');
     }
@@ -105,7 +112,7 @@ export default function GaritaConsolePage() {
     try {
       await api.post(`/gate/deliveries/${alertaId}/entry`, { observaciones: 'Registrado desde consola' });
       fetchDeliveries();
-      alert('Ingreso de repartidor registrado');
+      setSuccessMessage('El ingreso del repartidor se ha registrado exitosamente.');
     } catch (error) {
       alert('Error al registrar delivery');
     }
@@ -133,7 +140,7 @@ export default function GaritaConsolePage() {
       setVisitorName('');
       setPropertyContact(null);
       setPropertyQuery('');
-      if (autorizado) alert('Ingreso por verificación telefónica registrado');
+      if (autorizado) setSuccessMessage('Ingreso por verificación telefónica registrado exitosamente.');
     } catch (error) {
       alert('Error al registrar');
     }
@@ -148,11 +155,11 @@ export default function GaritaConsolePage() {
           <CheckCircle2 className="w-16 h-16 text-emerald-500 mx-auto" />
           <h3 className="text-2xl font-bold text-emerald-700">ACCESO AUTORIZADO</h3>
           <div className="text-left bg-white p-4 rounded-lg shadow-sm">
-            <p><strong>Visitante:</strong> {scanResult.pase?.nombre_visitante}</p>
-            <p><strong>Propiedad:</strong> {scanResult.pase?.propiedad?.identificador}</p>
-            {scanResult.pase?.vehiculo_placa && <p><strong>Placa:</strong> {scanResult.pase.vehiculo_placa}</p>}
+            <p><strong>Visitante:</strong> {scanResult.pass?.nombre_visitante}</p>
+            <p><strong>Propiedad:</strong> {scanResult.pass?.propiedad?.identificador}</p>
+            {scanResult.pass?.vehiculo_placa && <p><strong>Placa:</strong> {scanResult.pass.vehiculo_placa}</p>}
           </div>
-          <Button className="w-full min-h-[56px] text-lg bg-emerald-600 hover:bg-emerald-700" onClick={() => registerEntry(scanResult.pase.id)}>
+          <Button className="w-full min-h-[56px] text-lg bg-emerald-600 hover:bg-emerald-700" onClick={() => registerEntry(scanResult.pass.id)}>
             Registrar Entrada
           </Button>
         </div>
@@ -166,12 +173,12 @@ export default function GaritaConsolePage() {
           <h3 className="text-2xl font-bold text-amber-700">ADVERTENCIA: RESIDENTE EN MORA</h3>
           <p className="text-amber-800">{scanResult.mensaje}</p>
           <div className="text-left bg-white p-4 rounded-lg shadow-sm">
-            <p><strong>Visitante:</strong> {scanResult.pase?.nombre_visitante}</p>
-            <p><strong>Propiedad:</strong> {scanResult.pase?.propiedad?.identificador}</p>
+            <p><strong>Visitante:</strong> {scanResult.pass?.nombre_visitante}</p>
+            <p><strong>Propiedad:</strong> {scanResult.pass?.propiedad?.identificador}</p>
           </div>
           <div className="flex gap-4">
             <Button variant="outline" className="flex-1 min-h-[56px]" onClick={() => setScanResult(null)}>Rechazar</Button>
-            <Button className="flex-1 min-h-[56px] bg-amber-600 hover:bg-amber-700" onClick={() => registerEntry(scanResult.pase.id)}>
+            <Button className="flex-1 min-h-[56px] bg-amber-600 hover:bg-amber-700" onClick={() => registerEntry(scanResult.pass.id)}>
               Ingresar con Advertencia
             </Button>
           </div>
@@ -337,6 +344,20 @@ export default function GaritaConsolePage() {
               </div>
             )}
           </div>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={!!successMessage} onOpenChange={() => setSuccessMessage('')}>
+        <DialogContent className="sm:max-w-[400px] text-center p-8 border-emerald-100">
+          <div className="mx-auto w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-4">
+            <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+          </div>
+          <DialogTitle className="text-2xl font-bold text-zinc-900 mb-2">¡Operación Exitosa!</DialogTitle>
+          <DialogDescription className="text-zinc-600 text-base mb-6">
+            {successMessage}
+          </DialogDescription>
+          <Button className="w-full min-h-[48px] bg-emerald-600 hover:bg-emerald-700" onClick={() => setSuccessMessage('')}>
+            Aceptar
+          </Button>
         </DialogContent>
       </Dialog>
     </div>

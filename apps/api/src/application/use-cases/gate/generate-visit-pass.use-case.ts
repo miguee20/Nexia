@@ -39,6 +39,7 @@ export class GenerateVisitPassUseCase {
       residente_id: residenteId,
       propiedad_id: propiedadId,
       nombre_visitante: data.nombre_visitante,
+      placa_vehiculo: data.vehiculo_placa || null,
       motivo: data.motivo,
       qr_token: qrToken,
       fecha_expiracion: fechaExpiracion,

@@ -14,7 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Package, Clock, ShieldCheck, QrCode } from 'lucide-react';
+import { Plus, Package, Clock, ShieldCheck, QrCode, CheckCircle2 } from 'lucide-react';
 
 const visitSchema = z.object({
   nombre_visitante: z.string().min(1, 'El nombre es requerido'),
@@ -34,6 +34,7 @@ export default function VisitasPage() {
   // Modals
   const [isVisitModalOpen, setIsVisitModalOpen] = useState(false);
   const [isDeliveryModalOpen, setIsDeliveryModalOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   const [generatedQR, setGeneratedQR] = useState<{ token: string; expiracion: string } | null>(null);
 
   // Data
@@ -81,7 +82,7 @@ export default function VisitasPage() {
         fecha_llegada: values.fecha_llegada ? new Date(values.fecha_llegada).toISOString() : undefined
       };
       const { data } = await api.post('/visits', payload);
-      setGeneratedQR({ token: data.token, expiracion: data.fecha_expiracion });
+      setGeneratedQR({ token: data.qrToken, expiracion: data.visitPass.fecha_expiracion });
       visitForm.reset();
       setIsVisitModalOpen(false);
       fetchPasses();
@@ -96,6 +97,7 @@ export default function VisitasPage() {
       deliveryForm.reset();
       setIsDeliveryModalOpen(false);
       fetchDeliveries();
+      setSuccessMessage('Alerta de delivery creada exitosamente. La garita ha sido notificada.');
     } catch (error) {
       console.error(error);
     }
@@ -159,7 +161,7 @@ export default function VisitasPage() {
                   {pass.vehiculo_placa && <div className="flex items-center gap-2"><ShieldCheck className="w-3.5 h-3.5" /> Placa: {pass.vehiculo_placa}</div>}
                 </div>
                 {pass.estado === 'ACTIVO' && (
-                  <Button variant="secondary" className="w-full" onClick={() => setGeneratedQR({ token: pass.token_qr, expiracion: pass.fecha_expiracion })}>
+                  <Button variant="secondary" className="w-full" onClick={() => setGeneratedQR({ token: pass.qr_token, expiracion: pass.fecha_expiracion })}>
                     <QrCode className="w-4 h-4 mr-2" /> Mostrar QR
                   </Button>
                 )}
@@ -303,6 +305,20 @@ export default function VisitasPage() {
         </DialogContent>
       </Dialog>
 
+      <Dialog open={!!successMessage} onOpenChange={() => setSuccessMessage('')}>
+        <DialogContent className="sm:max-w-[400px] text-center p-8 border-emerald-100">
+          <div className="mx-auto w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-4">
+            <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+          </div>
+          <DialogTitle className="text-2xl font-bold text-zinc-900 mb-2">¡Operación Exitosa!</DialogTitle>
+          <DialogDescription className="text-zinc-600 text-base mb-6">
+            {successMessage}
+          </DialogDescription>
+          <Button className="w-full min-h-[48px] bg-emerald-600 hover:bg-emerald-700" onClick={() => setSuccessMessage('')}>
+            Aceptar
+          </Button>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

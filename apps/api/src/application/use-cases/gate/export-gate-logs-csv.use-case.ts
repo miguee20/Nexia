@@ -20,8 +20,8 @@ export class ExportGateLogsCsvUseCase {
     const rows = logs.map(log => {
       const entrada = log.entrada ? new Date(log.entrada).toLocaleString() : '';
       const salida = log.salida ? new Date(log.salida).toLocaleString() : '';
-      const visitante = log.nombre_visitante || '';
-      const placa = log.placa_vehiculo || '';
+      const visitante = log.nombre_visitante || log.pase?.nombre_visitante || log.alerta_delivery?.nombre_repartidor || '';
+      const placa = log.placa_vehiculo || log.pase?.placa_vehiculo || '';
       
       let propiedad = 'N/A';
       if (log.pase?.propiedad?.identificador) {
@@ -31,17 +31,17 @@ export class ExportGateLogsCsvUseCase {
       }
 
       return [
-        entrada,
-        salida,
+        `"${entrada}"`,
+        `"${salida}"`,
         `"${visitante}"`,
         `"${placa}"`,
         `"${propiedad}"`,
         `"${log.tipo_registro}"`,
         `"${log.guardia.nombre_completo}"`,
-        log.id
+        `"${log.id}"`
       ].join(',');
     });
 
-    return [headers.join(','), ...rows].join('\n');
+    return '\uFEFF' + [headers.join(','), ...rows].join('\n');
   }
 }

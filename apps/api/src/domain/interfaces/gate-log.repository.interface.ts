@@ -23,8 +23,8 @@ export interface GateLogFilters {
 
 export interface GateLogWithRelations extends GateLogEntity {
   guardia: { nombre_completo: string };
-  pase?: { propiedad: { identificador: string } } | null;
-  alerta_delivery?: { propiedad: { identificador: string } } | null;
+  pase?: { nombre_visitante: string; placa_vehiculo: string | null; propiedad: { identificador: string } } | null;
+  alerta_delivery?: { nombre_repartidor: string | null; propiedad: { identificador: string } } | null;
 }
 
 export interface IGateLogRepository {
