@@ -14,14 +14,13 @@ import {
   Palmtree,
   Settings,
   QrCode,
-  Package,
-  Phone,
   CreditCard,
-  History,
   Calendar,
   User as UserIcon,
   LogOut,
-  LucideIcon
+  LucideIcon,
+  ShieldCheck,
+  History
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -39,6 +38,7 @@ const MENU_ITEMS: RoleMenu = {
   SUPERADMIN: [
     { name: 'Condominios', href: '/sa/condominios', icon: Building2 },
     { name: 'Métricas Globales', href: '/sa/metricas', icon: BarChart3 },
+    { name: 'Bitácora de Garita', href: '/dashboard/bitacora', icon: History },
   ],
   ADMIN_CONDOMINIO: [
     { name: 'Propiedades', href: '/dashboard/propiedades', icon: Home },
@@ -46,17 +46,16 @@ const MENU_ITEMS: RoleMenu = {
     { name: 'Finanzas', href: '/dashboard/finanzas', icon: Wallet },
     { name: 'Marbetes', href: '/dashboard/marbetes', icon: Car },
     { name: 'Amenidades', href: '/dashboard/amenidades', icon: Palmtree },
+    { name: 'Bitácora de Garita', href: '/dashboard/bitacora', icon: History },
+    { name: 'Consola Garita', href: '/garita', icon: ShieldCheck },
     { name: 'Configuración', href: '/dashboard/configuracion', icon: Settings },
   ],
   GUARDIA: [
-    { name: 'Escanear QR', href: '/garita', icon: QrCode },
-    { name: 'Deliveries Esperados', href: '/garita/deliveries', icon: Package },
-    { name: 'Verificar Residente', href: '/garita/verificar', icon: Phone },
+    { name: 'Consola Garita', href: '/garita', icon: ShieldCheck },
   ],
   RESIDENTE: [
     { name: 'Mis Cuotas', href: '/mi-cuenta/cuotas', icon: CreditCard },
-    { name: 'Mis Visitas', href: '/mi-cuenta/visitas', icon: History },
-    { name: 'Deliveries', href: '/mi-cuenta/deliveries', icon: Package },
+    { name: 'Visitas y Accesos', href: '/visitas', icon: QrCode },
     { name: 'Reservas', href: '/mi-cuenta/reservas', icon: Calendar },
     { name: 'Mi Cuenta', href: '/mi-cuenta', icon: UserIcon },
   ],

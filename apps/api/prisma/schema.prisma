@@ -270,6 +270,7 @@ model PaseVisita {
   residente_id     String       @db.Uuid
   propiedad_id     String       @db.Uuid
   nombre_visitante String
+  placa_vehiculo   String?
   motivo           MotivoVisita
   qr_token         String       @unique
   fecha_creacion   DateTime     @default(now())

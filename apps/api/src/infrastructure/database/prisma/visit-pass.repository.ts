@@ -11,6 +11,7 @@ export class PrismaVisitPassRepository implements IVisitPassRepository {
         residente_id: data.residente_id,
         propiedad_id: data.propiedad_id,
         nombre_visitante: data.nombre_visitante,
+        placa_vehiculo: data.placa_vehiculo,
         motivo: data.motivo as MotivoVisita,
         qr_token: data.qr_token,
         fecha_expiracion: data.fecha_expiracion,

@@ -55,6 +55,7 @@ La API REST (`apps/api`) utiliza **Express 4.x** estructurado de manera estricta
 - **Jerarquía:** Tablas y listas siempre contenidas en cards con `border border-zinc-200 shadow-sm rounded-xl`.
 - **Acciones:** Evitar botones con colores saturados masivos para acciones destructivas en tablas; usar variantes `outline`, `ghost` o dropdowns contextuales.
 - **Layout Shell:** Toda vista autenticada debe respetar el contenedor de `max-w-7xl mx-auto p-6 md:p-8`.
+- **Alertas y Confirmaciones Estrictas:** Queda terminantemente prohibido el uso de las funciones nativas `alert()`, `confirm()` o `prompt()` del navegador. Cualquier mensaje de éxito, fallo, alerta o solicitud de confirmación debe implementarse utilizando Modales de Shadcn (`Dialog`), Toasts o componentes visuales integrados, garantizando una experiencia inmersiva e ideal para pantallas táctiles (tablets/móviles).
 
 ### 1.5 Persistencia y Multi-Tenancy
 - **ORM:** Prisma 6.x.
