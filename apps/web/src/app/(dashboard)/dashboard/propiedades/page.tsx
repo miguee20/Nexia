@@ -14,6 +14,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { toast } from 'sonner';
 
 const propertySchema = z.object({
   identificador: z.string().min(1, 'Identificador es requerido'),
@@ -69,9 +70,10 @@ export default function PropiedadesPage() {
       setIsCreateOpen(false);
       form.reset();
       loadProperties();
+      toast.success('Propiedad creada exitosamente.');
     } catch (error: any) {
       console.error(error);
-      alert(error?.response?.data?.message || 'Error al crear la propiedad');
+      toast.error(error?.response?.data?.message || 'Error al crear la propiedad');
     }
   };
 

@@ -6,6 +6,7 @@ import { CreateDeliveryAlertUseCase } from '../../application/use-cases/gate/cre
 import { ListActiveDeliveryAlertsUseCase } from '../../application/use-cases/gate/list-active-delivery-alerts.use-case';
 import { ListMyActiveDeliveryAlertsUseCase } from '../../application/use-cases/gate/list-my-active-delivery-alerts.use-case';
 import { ListMyVisitPassesUseCase } from '../../application/use-cases/gate/list-my-visit-passes.use-case';
+import { CancelVisitPassUseCase } from '../../application/use-cases/gate/cancel-visit-pass.use-case';
 import { RegisterEntryUseCase } from '../../application/use-cases/gate/register-entry.use-case';
 import { RegisterExitUseCase } from '../../application/use-cases/gate/register-exit.use-case';
 import { ManualEntryUseCase } from '../../application/use-cases/gate/manual-entry.use-case';
@@ -38,6 +39,7 @@ export class GateController {
   private listActiveDeliveryAlertsUseCase: ListActiveDeliveryAlertsUseCase;
   private listMyActiveDeliveryAlertsUseCase: ListMyActiveDeliveryAlertsUseCase;
   private listMyVisitPassesUseCase: ListMyVisitPassesUseCase;
+  private cancelVisitPassUseCase: CancelVisitPassUseCase;
   
   private registerEntryUseCase: RegisterEntryUseCase;
   private registerExitUseCase: RegisterExitUseCase;
@@ -66,6 +68,7 @@ export class GateController {
     this.listActiveDeliveryAlertsUseCase = new ListActiveDeliveryAlertsUseCase(deliveryAlertRepo);
     this.listMyActiveDeliveryAlertsUseCase = new ListMyActiveDeliveryAlertsUseCase(deliveryAlertRepo);
     this.listMyVisitPassesUseCase = new ListMyVisitPassesUseCase(visitPassRepo);
+    this.cancelVisitPassUseCase = new CancelVisitPassUseCase(visitPassRepo);
     
     this.registerEntryUseCase = new RegisterEntryUseCase(gateLogRepo, visitPassRepo);
     this.registerExitUseCase = new RegisterExitUseCase(gateLogRepo);
@@ -114,6 +117,17 @@ export class GateController {
       const { condominioId, userId } = req.user!;
       const passes = await this.listMyVisitPassesUseCase.execute(userId, condominioId);
       res.json(passes);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  cancelVisitPass = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { condominioId, userId, rol } = req.user!;
+      const id = req.params.id as string;
+      const cancelled = await this.cancelVisitPassUseCase.execute(id, userId, condominioId, rol);
+      res.json(cancelled);
     } catch (error) {
       next(error);
     }

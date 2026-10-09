@@ -13,5 +13,6 @@ router.use(rbacMiddleware(['RESIDENTE', 'ADMIN_CONDOMINIO', 'SUPERADMIN']));
 
 router.post('/', gateController.generateVisitPass);
 router.get('/my', gateController.listMyVisitPasses);
+router.delete('/:id', gateController.cancelVisitPass);
 
 export default router;
