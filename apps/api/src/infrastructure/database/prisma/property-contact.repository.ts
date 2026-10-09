@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { IPropertyContactRepository, PropertyContactEntity } from '../../../domain/interfaces/property-contact.repository.interface';
+import { IPropertyContactRepository, PropertyContactEntity, PropertySuggestionEntity } from '../../../domain/interfaces/property-contact.repository.interface';
 
 export class PrismaPropertyContactRepository implements IPropertyContactRepository {
   constructor(private readonly prisma: PrismaClient) {}
@@ -23,5 +23,17 @@ export class PrismaPropertyContactRepository implements IPropertyContactReposito
       propietario: property.propietario,
       inquilino: property.inquilino
     };
+  }
+
+  async searchByIdentifier(query: string, condominio_id: string, limit: number): Promise<PropertySuggestionEntity[]> {
+    return this.prisma.propiedad.findMany({
+      where: {
+        condominio_id,
+        ...(query ? { identificador: { contains: query, mode: 'insensitive' } } : {})
+      },
+      select: { id: true, identificador: true },
+      orderBy: { identificador: 'asc' },
+      take: limit
+    });
   }
 }
