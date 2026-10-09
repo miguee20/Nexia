@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { api } from '@/lib/api';
-import { QRCodeCanvas } from 'qrcode.react';
+import { QRCodeSVG, QRCodeCanvas } from 'qrcode.react';
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -131,7 +131,7 @@ export default function VisitasPage() {
   const downloadQRCard = () => {
     if (!generatedQR) return;
 
-    const qrCanvas = document.getElementById('qr-canvas-element') as HTMLCanvasElement;
+    const qrCanvas = document.getElementById('qr-canvas-download-source') as HTMLCanvasElement;
     if (!qrCanvas) {
       toast.error('No se pudo encontrar el código QR.');
       return;
@@ -180,7 +180,10 @@ export default function VisitasPage() {
     ctx.roundRect(qrX - 16, qrY - 16, qrSize + 32, qrSize + 32, 16);
     ctx.fill();
 
+    // Disable image smoothing for ultra-sharp QR modules with crisp edges
+    ctx.imageSmoothingEnabled = false;
     ctx.drawImage(qrCanvas, qrX, qrY, qrSize, qrSize);
+    ctx.imageSmoothingEnabled = true;
 
     // Separator line
     ctx.strokeStyle = '#e4e4e7';
@@ -490,9 +493,25 @@ export default function VisitasPage() {
                   <span className="text-emerald-600 font-bold">{generatedQR.propiedad || 'Condominio'}</span>
                 </div>
 
-                {/* QR Canvas */}
-                <div className="py-3 bg-white p-3 rounded-xl shadow-xs border border-zinc-100 my-3">
-                  <QRCodeCanvas id="qr-canvas-element" value={generatedQR.token} size={200} level="H" includeMargin />
+                {/* QR Vector SVG (Crisp vector quality on screen) */}
+                <div className="py-3 bg-white p-3 rounded-xl shadow-xs border border-zinc-100 my-3 flex items-center justify-center">
+                  <QRCodeSVG
+                    value={generatedQR.token}
+                    size={220}
+                    level="M"
+                    includeMargin
+                    className="max-w-full h-auto"
+                  />
+                  {/* Hidden high-res canvas (600px, level="M") used strictly for sharp PNG export */}
+                  <div className="hidden">
+                    <QRCodeCanvas
+                      id="qr-canvas-download-source"
+                      value={generatedQR.token}
+                      size={600}
+                      level="M"
+                      includeMargin
+                    />
+                  </div>
                 </div>
 
                 {/* Card Details */}
