@@ -16,6 +16,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { ArrowLeft, Plus, Ban, Tag } from 'lucide-react';
+import { toast } from 'sonner';
 
 const vehicleSchema = z.object({
   placa: z.string().min(1, 'La placa es requerida'),
@@ -43,6 +44,7 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
 
   const [isAssignOpen, setIsAssignOpen] = useState(false);
   const [availableResidents, setAvailableResidents] = useState<any[]>([]);
+  const [marbeteToCancel, setMarbeteToCancel] = useState<string | null>(null);
 
   const vehicleForm = useForm<z.infer<typeof vehicleSchema>>({
     resolver: zodResolver(vehicleSchema),
@@ -84,9 +86,10 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
       setIsAssignOpen(false);
       assignForm.reset();
       loadData();
+      toast.success('Residente asignado exitosamente.');
     } catch (error: any) {
       console.error(error);
-      alert(error?.response?.data?.message || 'Error al asignar residente');
+      toast.error(error?.response?.data?.message || 'Error al asignar residente');
     }
   };
 
@@ -96,28 +99,34 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
       setIsVehicleOpen(false);
       vehicleForm.reset();
       loadData();
+      toast.success('Vehículo registrado exitosamente.');
     } catch (error) {
       console.error(error);
-      alert('Error registrando vehículo (tal vez la placa ya existe)');
+      toast.error('Error registrando vehículo (tal vez la placa ya existe).');
     }
   };
 
-  const handleCancelMarbete = async (marbeteId: string) => {
-    if (!confirm('¿Seguro que deseas cancelar este marbete?')) return;
+  const confirmCancelMarbete = async () => {
+    if (!marbeteToCancel) return;
     try {
-      await propertyService.cancelMarbete(marbeteId);
+      await propertyService.cancelMarbete(marbeteToCancel);
+      toast.success('Marbete cancelado exitosamente.');
+      setMarbeteToCancel(null);
       loadData();
     } catch (error) {
       console.error(error);
+      toast.error('Error al cancelar el marbete.');
     }
   };
 
   const handleIssueMarbete = async (vehiculoId: string) => {
     try {
       await propertyService.issueMarbete(vehiculoId, 'MENSUAL');
+      toast.success('Marbete emitido exitosamente.');
       loadData();
     } catch (error) {
       console.error(error);
+      toast.error('Error al emitir el marbete.');
     }
   };
 
@@ -322,7 +331,7 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
                         </TableCell>
                         <TableCell>
                           {activeMarbete ? (
-                            <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 dark:border-red-900/50 dark:hover:bg-red-950/50" onClick={() => handleCancelMarbete(activeMarbete.id)}>
+                            <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 dark:border-red-900/50 dark:hover:bg-red-950/50" onClick={() => setMarbeteToCancel(activeMarbete.id)}>
                               <Ban className="w-4 h-4 mr-1" /> Cancelar
                             </Button>
                           ) : (
@@ -340,6 +349,22 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Modal de confirmación para cancelar marbete */}
+      <Dialog open={!!marbeteToCancel} onOpenChange={(open) => !open && setMarbeteToCancel(null)}>
+        <DialogContent className="sm:max-w-[420px]">
+          <DialogHeader>
+            <DialogTitle className="text-lg">¿Cancelar este marbete?</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-zinc-600 py-2">
+            Esta acción revocará el marbete activo. El vehículo ya no podrá ingresar usando este identificador en garita.
+          </p>
+          <div className="flex justify-end gap-3 pt-3">
+            <Button variant="outline" onClick={() => setMarbeteToCancel(null)}>Volver</Button>
+            <Button variant="destructive" onClick={confirmCancelMarbete}>Confirmar Cancelación</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

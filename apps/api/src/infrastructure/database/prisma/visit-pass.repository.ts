@@ -40,6 +40,17 @@ export class PrismaVisitPassRepository implements IVisitPassRepository {
     return pass as VisitPassWithRelations | null;
   }
 
+  async findById(id: string, condominio_id: string): Promise<VisitPassEntity | null> {
+    const pass = await this.prisma.paseVisita.findFirst({
+      where: {
+        id,
+        condominio_id,
+      },
+    });
+
+    return pass;
+  }
+
   async findActiveByResident(residente_id: string, condominio_id: string): Promise<VisitPassWithRelations[]> {
     const passes = await this.prisma.paseVisita.findMany({
       where: {

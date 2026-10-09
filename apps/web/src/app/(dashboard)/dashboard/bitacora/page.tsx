@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Download, Search, History, ChevronLeft, ChevronRight, FilterX } from 'lucide-react';
+import { toast } from 'sonner';
 
 type GateLog = {
   id: string;
@@ -81,9 +82,10 @@ export default function BitacoraGaritaPage() {
       document.body.appendChild(link);
       link.click();
       link.parentNode?.removeChild(link);
+      toast.success('Bitácora exportada a CSV exitosamente.');
     } catch (error) {
       console.error('Error exporting CSV', error);
-      alert('Error al exportar CSV');
+      toast.error('No se pudo exportar la bitácora a CSV. Intenta de nuevo.');
     } finally {
       setExporting(false);
     }

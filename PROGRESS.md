@@ -8,8 +8,8 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 
 - [x] **Fase 0: Infraestructura y Scaffolding (Cimientos)** (11 / 11 completadas)
 - [x] **Fase 1: Autenticación, Tenants y Modelo Base** (11 / 11 completadas)
-- [x] **Fase 2: Propiedades, Residentes, Vehículos y Marbetes** (0 / 10 completadas)
-- [ ] **Fase 3: Módulo de Garita, Pases QR, Alertas de Delivery y Fallback** (0 / 17 completadas)
+- [x] **Fase 2: Propiedades, Residentes, Vehículos y Marbetes** (10 / 10 completadas)
+- [x] **Fase 3: Módulo de Garita, Pases QR, Alertas de Delivery y Fallback** (19 / 19 completadas)
 - [ ] **Fase 4: Módulo Financiero** (0 / 11 completadas)
 - [ ] **Fase 5: Módulo de Amenidades** (0 / 6 completadas)
 - [ ] **Fase 6: Notificaciones, Pulido y Documentación** (0 / 8 completadas)
@@ -95,7 +95,9 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 - [x] Frontend (Garita): Sección "Deliveries Esperados" con alertas activas y botón "Registrar Delivery".
 - [x] Frontend (Garita): Botón "Verificar con Residente" que muestra teléfono de la propiedad y permite registrar ingreso por llamada.
 - [x] Frontend (Admin): Vista de bitácora con filtros.
-- [x] Tests: Validación de QR expirado, QR ya usado, QR de moroso, alerta de delivery expirada, registro por llamada.
+- [x] Frontend (Residente): Revocación y cancelación de pases activos con modal de confirmación y descarga del pase en imagen PNG tipo credencial.
+- [x] Migración global: Reemplazo total de alerts y confirms por componentes Dialog y Toasts (sonner).
+- [x] Tests: Validación de QR expirado, QR ya usado, QR de moroso, alerta de delivery expirada, registro por llamada, cancelación de pase.
 
 ---
 

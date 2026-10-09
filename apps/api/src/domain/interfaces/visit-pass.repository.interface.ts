@@ -24,6 +24,7 @@ export interface VisitPassWithRelations extends VisitPassEntity {
 export interface IVisitPassRepository {
   create(data: Omit<VisitPassEntity, 'id' | 'qr_token' | 'fecha_creacion' | 'estado'> & { qr_token: string }): Promise<VisitPassEntity>;
   findByToken(token: string, condominio_id: string): Promise<VisitPassWithRelations | null>;
+  findById(id: string, condominio_id: string): Promise<VisitPassEntity | null>;
   findActiveByResident(residente_id: string, condominio_id: string): Promise<VisitPassWithRelations[]>;
   updateState(id: string, condominio_id: string, estado: 'UTILIZADO' | 'EXPIRADO' | 'CANCELADO'): Promise<VisitPassEntity>;
 }

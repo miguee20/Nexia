@@ -31,7 +31,7 @@ describe('ExportGateLogsCsvUseCase', () => {
     const lines = result.split('\n');
     
     expect(lines.length).toBe(2); // header + 1 row
-    expect(lines[0]).toBe('Fecha/Hora Entrada,Fecha/Hora Salida,Visitante/Repartidor,Placa,Propiedad Destino,Tipo Evento,Guardia,ID Registro');
+    expect(lines[0]).toBe('\uFEFFFecha/Hora Entrada,Fecha/Hora Salida,Visitante/Repartidor,Placa,Propiedad Destino,Tipo Evento,Guardia,ID Registro');
     expect(lines[1]).toContain('Juan');
     expect(lines[1]).toContain('A-1');
     expect(lines[1]).toContain('Guardia 1');
