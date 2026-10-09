@@ -4,7 +4,7 @@ import { Topbar } from './Topbar';
 
 export function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-screen overflow-hidden bg-zinc-100/70">
+    <div className="flex h-screen overflow-hidden bg-zinc-50/50">
       <Sidebar />
       <div className="flex flex-col flex-1 overflow-hidden">
         <Topbar />

@@ -51,7 +51,7 @@ export function Topbar() {
   );
 
   return (
-    <header className="h-14 border-b border-zinc-200 bg-white/80 backdrop-blur-md px-6 flex items-center justify-between shrink-0">
+    <header className="h-14 border-b border-zinc-200/70 bg-white/80 backdrop-blur-md px-6 flex items-center justify-between shrink-0 sticky top-0 z-10">
       {/* Left — Breadcrumb */}
       <nav className="flex items-center gap-1.5 text-sm text-zinc-500">
         <span className="font-semibold text-zinc-900">Nexia</span>
@@ -68,7 +68,7 @@ export function Topbar() {
       {/* Right — Tenant badge + role + avatar */}
       <div className="flex items-center gap-4">
         {/* Condominium badge */}
-        <div className="hidden md:flex items-center gap-1.5 text-xs font-medium text-zinc-600 bg-zinc-100 border border-zinc-200/80 rounded-lg px-2.5 py-1">
+        <div className="hidden md:flex items-center gap-1.5 text-xs font-medium text-zinc-600 bg-zinc-50 border border-zinc-200/70 rounded-md px-2 py-1">
           <Building2 className="h-3.5 w-3.5 text-zinc-500" />
           <span className="truncate max-w-[180px]">Condominio Activo</span>
         </div>
@@ -79,7 +79,7 @@ export function Topbar() {
         </span>
 
         {/* User avatar */}
-        <div className="h-8 w-8 rounded-full bg-zinc-900 flex items-center justify-center text-xs font-bold text-white">
+        <div className="h-7 w-7 rounded-full bg-zinc-900 flex items-center justify-center text-xs font-medium text-white ring-1 ring-zinc-900/10">
           {user.nombre_completo.charAt(0).toUpperCase()}
         </div>
       </div>

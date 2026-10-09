@@ -4,7 +4,8 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    /* canvas = zinc-50, surfaces = white, borders = zinc-200 */
+    --background: 0 0% 98%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -18,11 +19,11 @@
     --muted-foreground: 240 3.8% 46.1%;
     --accent: 240 4.8% 95.9%;
     --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --ring: 240 10% 3.9%;
+    --ring: 240 5.9% 10%;
     --radius: 0.75rem;
   }
 
@@ -54,6 +55,24 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased selection:bg-zinc-900 selection:text-white;
+  }
+  ::selection {
+    @apply bg-zinc-900 text-white;
+  }
+  /* Ultra-thin minimalist scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: theme("colors.zinc.300") transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-zinc-300 hover:bg-zinc-400 rounded-full;
   }
 }
