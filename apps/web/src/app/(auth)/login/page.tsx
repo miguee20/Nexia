@@ -9,8 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle, Loader2, Building2 } from 'lucide-react';
+import { AlertCircle, Loader2 } from 'lucide-react';
 
 const loginSchema = z.object({
   email: z.string().email('Ingresa un correo válido'),
@@ -73,31 +72,26 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-zinc-50 px-4">
       <div className="w-full max-w-md space-y-6">
-        <Card className="border border-zinc-200/80 shadow-xl shadow-zinc-900/5">
-          <CardHeader className="space-y-2 pb-6 pt-8">
-            <div className="flex justify-center mb-4">
-              <div className="h-12 w-12 rounded-xl bg-indigo-600 flex items-center justify-center shadow-sm">
-                <Building2 className="h-6 w-6 text-white" />
-              </div>
-            </div>
-            <CardTitle className="text-2xl font-bold text-center tracking-tight">Nexia</CardTitle>
-            <CardDescription className="text-center">
+        <Card className="rounded-2xl border border-zinc-200/80 bg-white p-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
+          <CardHeader className="space-y-1.5 p-0 pb-6">
+            <CardTitle className="text-2xl font-semibold tracking-tight text-zinc-900">Nexia</CardTitle>
+            <CardDescription className="text-xs font-normal text-zinc-500">
               Ingresa a tu cuenta para continuar
             </CardDescription>
           </CardHeader>
-          <CardContent className="pb-8">
+          <CardContent className="p-0">
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Error</AlertTitle>
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
+                <div role="alert" className="flex items-start gap-2 rounded-lg border border-rose-200/60 bg-rose-50 p-3 text-xs text-rose-700">
+                  <AlertCircle className="mt-px h-3.5 w-3.5 shrink-0" />
+                  <span>{error}</span>
+                </div>
               )}
-              <div className="space-y-2">
-                <Label htmlFor="email">Correo Electrónico</Label>
+              <div className="space-y-1.5">
+                <Label htmlFor="email" className="text-xs font-medium text-zinc-700">Correo Electrónico</Label>
                 <Input
                   id="email"
+                  className="h-9 text-sm"
                   type="email"
                   placeholder="nombre@ejemplo.com"
                   value={email}
@@ -105,24 +99,25 @@ export default function LoginPage() {
                   required
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Contraseña</Label>
+              <div className="space-y-1.5">
+                <Label htmlFor="password" className="text-xs font-medium text-zinc-700">Contraseña</Label>
                 <Input
                   id="password"
+                  className="h-9 text-sm"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
               </div>
-              <Button type="submit" className="w-full mt-2" disabled={isLoading}>
+              <Button type="submit" className="mt-2 h-9 w-full bg-zinc-900 text-sm text-white shadow-2xs hover:bg-zinc-800" disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Iniciar Sesión
               </Button>
             </form>
           </CardContent>
         </Card>
-        <p className="text-center text-sm text-zinc-500">
+        <p className="text-center text-xs text-zinc-500">
           SaaS Multi-tenant para Condominios
         </p>
       </div>

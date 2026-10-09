@@ -93,11 +93,11 @@ export default function BitacoraGaritaPage() {
 
   const getTipoEventoBadge = (tipo: string) => {
     switch (tipo) {
-      case 'ENTRADA_QR': return <Badge className="bg-emerald-100 text-emerald-800">Entrada QR</Badge>;
-      case 'SALIDA_QR': return <Badge className="bg-zinc-100 text-zinc-800">Salida QR</Badge>;
-      case 'ENTRADA_MANUAL': return <Badge className="bg-blue-100 text-blue-800">Manual</Badge>;
-      case 'DELIVERY': return <Badge className="bg-orange-100 text-orange-800">Delivery</Badge>;
-      case 'VERIFICACION_LLAMADA': return <Badge className="bg-purple-100 text-purple-800">Verif. Llamada</Badge>;
+      case 'ENTRADA_QR': return <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200/60 font-medium">Entrada QR</Badge>;
+      case 'SALIDA_QR': return <Badge className="bg-zinc-100 text-zinc-700 border-zinc-200/70 font-medium">Salida QR</Badge>;
+      case 'ENTRADA_MANUAL': return <Badge className="bg-sky-50 text-sky-700 border-sky-200/60 font-medium">Manual</Badge>;
+      case 'DELIVERY': return <Badge className="bg-amber-50 text-amber-700 border-amber-200/60 font-medium">Delivery</Badge>;
+      case 'VERIFICACION_LLAMADA': return <Badge className="bg-violet-50 text-violet-700 border-violet-200/60 font-medium">Verif. Llamada</Badge>;
       default: return <Badge>{tipo}</Badge>;
     }
   };
@@ -113,8 +113,8 @@ export default function BitacoraGaritaPage() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-zinc-900 flex items-center gap-2">
-            <History className="w-8 h-8 text-zinc-700" />
+          <h1 className="flex items-center gap-2 text-xl font-semibold tracking-tight text-zinc-900">
+            <History className="h-5 w-5 text-zinc-500" />
             Bitácora de Garita
           </h1>
           <p className="text-sm text-zinc-500 mt-1">
@@ -122,28 +122,30 @@ export default function BitacoraGaritaPage() {
           </p>
         </div>
         <Button 
+          variant="outline"
+          size="sm"
           onClick={handleExportCsv} 
           disabled={exporting}
-          className="bg-zinc-900 hover:bg-zinc-800"
+          className="h-9 border-zinc-200 text-zinc-900 hover:bg-zinc-50"
         >
-          <Download className={`w-4 h-4 mr-2 ${exporting ? 'animate-bounce' : ''}`} />
+          <Download className={`w-4 h-4 mr-2 ${exporting ? 'opacity-50' : ''}`} />
           {exporting ? 'Generando CSV...' : 'Exportar a CSV'}
         </Button>
       </div>
 
-      <Card className="bg-white border-zinc-200/80 shadow-xs rounded-xl overflow-hidden">
+      <Card className="overflow-hidden rounded-xl border-zinc-200/80 bg-white shadow-xs">
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-zinc-700">Fecha Desde</label>
-              <Input type="datetime-local" value={fechaDesde} onChange={e => { setFechaDesde(e.target.value); setPage(1); }} />
+              <label className="text-xs font-medium text-zinc-700">Fecha Desde</label>
+              <Input type="datetime-local" className="h-9 text-sm tabular-nums" value={fechaDesde} onChange={e => { setFechaDesde(e.target.value); setPage(1); }} />
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-zinc-700">Fecha Hasta</label>
-              <Input type="datetime-local" value={fechaHasta} onChange={e => { setFechaHasta(e.target.value); setPage(1); }} />
+              <label className="text-xs font-medium text-zinc-700">Fecha Hasta</label>
+              <Input type="datetime-local" className="h-9 text-sm tabular-nums" value={fechaHasta} onChange={e => { setFechaHasta(e.target.value); setPage(1); }} />
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-zinc-700">Tipo de Evento</label>
+              <label className="text-xs font-medium text-zinc-700">Tipo de Evento</label>
               <Select value={tipoEvento} onValueChange={(val) => { setTipoEvento(val); setPage(1); }}>
                 <SelectTrigger>
                   <SelectValue placeholder="Todos" />
@@ -159,21 +161,21 @@ export default function BitacoraGaritaPage() {
               </Select>
             </div>
             <div className="flex items-end">
-              <Button variant="outline" className="w-full" onClick={clearFilters}>
+              <Button variant="outline" className="h-9 w-full" onClick={clearFilters}>
                 <FilterX className="w-4 h-4 mr-2" /> Limpiar Filtros
               </Button>
             </div>
           </div>
 
-          <div className="rounded-md border border-zinc-200 overflow-hidden">
+          <div className="overflow-hidden rounded-lg border border-zinc-200/80">
             <Table>
-              <TableHeader className="bg-zinc-50">
+              <TableHeader>
                 <TableRow>
-                  <TableHead className="font-semibold text-zinc-700">Fecha / Hora</TableHead>
-                  <TableHead className="font-semibold text-zinc-700">Evento</TableHead>
-                  <TableHead className="font-semibold text-zinc-700">Propiedad</TableHead>
-                  <TableHead className="font-semibold text-zinc-700">Visitante / Info</TableHead>
-                  <TableHead className="font-semibold text-zinc-700">Guardia Turno</TableHead>
+                  <TableHead>Fecha / Hora</TableHead>
+                  <TableHead>Evento</TableHead>
+                  <TableHead>Propiedad</TableHead>
+                  <TableHead>Visitante / Info</TableHead>
+                  <TableHead>Guardia Turno</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -187,17 +189,17 @@ export default function BitacoraGaritaPage() {
                   </TableRow>
                 ) : (
                   logs.map((log) => (
-                    <TableRow key={log.id} className="hover:bg-zinc-50/50">
-                      <TableCell className="text-sm whitespace-nowrap text-zinc-600">
+                    <TableRow key={log.id} className="">
+                      <TableCell className="whitespace-nowrap text-sm text-zinc-600 tabular-nums">
                         {log.entrada ? new Date(log.entrada).toLocaleString() : 'N/A'}
                       </TableCell>
                       <TableCell>{getTipoEventoBadge(log.tipo_registro)}</TableCell>
-                      <TableCell className="font-medium">
+                      <TableCell className="font-medium text-zinc-900 tabular-nums">
                         {log.pase?.propiedad?.identificador || log.alerta_delivery?.propiedad?.identificador || '-'}
                       </TableCell>
                       <TableCell>
-                        <div className="text-sm">{log.nombre_visitante || log.pase?.nombre_visitante || log.alerta_delivery?.nombre_repartidor || 'Repartidor / Desconocido'}</div>
-                        {(log.placa_vehiculo || log.pase?.placa_vehiculo) && <div className="text-xs text-zinc-500 flex items-center gap-1 mt-0.5"><Search className="w-3 h-3" /> {log.placa_vehiculo || log.pase?.placa_vehiculo}</div>}
+                        <div className="text-sm text-zinc-900">{log.nombre_visitante || log.pase?.nombre_visitante || log.alerta_delivery?.nombre_repartidor || 'Repartidor / Desconocido'}</div>
+                        {(log.placa_vehiculo || log.pase?.placa_vehiculo) && <div className="text-xs text-zinc-500 flex items-center gap-1 mt-0.5 tabular-nums"><Search className="w-3 h-3" /> {log.placa_vehiculo || log.pase?.placa_vehiculo}</div>}
                       </TableCell>
                       <TableCell className="text-sm text-zinc-600">{log.guardia.nombre_completo}</TableCell>
                     </TableRow>

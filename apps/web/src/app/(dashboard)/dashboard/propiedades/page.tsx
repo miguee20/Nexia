@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, Plus, Search, Eye, Home, Car } from 'lucide-react';
+import { MoreHorizontal, Plus, Search, Eye } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useForm } from 'react-hook-form';
@@ -95,7 +95,7 @@ export default function PropiedadesPage() {
     };
     const cls = map[estado] || 'bg-zinc-100 text-zinc-600 border border-zinc-200';
     return (
-      <span className={`inline-flex items-center font-medium text-xs px-2.5 py-0.5 rounded-full ${cls}`}>
+      <span className={`inline-flex items-center font-medium text-xs px-2 py-0.5 rounded-md ${cls}`}>
         {estado}
       </span>
     );
@@ -103,63 +103,86 @@ export default function PropiedadesPage() {
 
   return (
     <div className="space-y-6">
-      {/* ────── KPI Stat Cards ────── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white p-4 rounded-xl border border-zinc-200/80 shadow-xs flex items-center gap-4">
-          <div className="h-10 w-10 rounded-lg bg-indigo-50 flex items-center justify-center">
-            <Home className="h-5 w-5 text-indigo-600" />
-          </div>
-          <div>
-            <p className="text-2xl font-bold tracking-tight">{totalProperties}</p>
-            <p className="text-xs text-zinc-500">Total Propiedades</p>
-          </div>
+      {/* KPI Stat Cards */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+          <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">Total Propiedades</p>
+          <p className="mt-2 text-3xl font-semibold tracking-tight text-zinc-900 tabular-nums">{totalProperties}</p>
+          <p className="mt-1 text-xs text-zinc-400">Registradas en el condominio</p>
         </div>
-        <div className="bg-white p-4 rounded-xl border border-zinc-200/80 shadow-xs flex items-center gap-4">
-          <div className="h-10 w-10 rounded-lg bg-emerald-50 flex items-center justify-center">
-            <span className="text-emerald-600 font-bold text-sm">%</span>
+        <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+          <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">Ocupación</p>
+          <div className="mt-2 flex items-baseline gap-2">
+            <p className="text-3xl font-semibold tracking-tight text-zinc-900 tabular-nums">{occupancyRate}%</p>
+            <span className="text-xs font-medium text-emerald-700 tabular-nums">{occupiedCount}/{totalProperties}</span>
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <p className="text-2xl font-bold tracking-tight">{occupancyRate}%</p>
-              <span className="inline-flex items-center bg-emerald-50 text-emerald-700 border border-emerald-200/60 font-medium text-[10px] px-1.5 py-0.5 rounded-full">
-                {occupiedCount}/{totalProperties}
-              </span>
-            </div>
-            <p className="text-xs text-zinc-500">Ocupación</p>
-          </div>
+          <p className="mt-1 text-xs text-zinc-400">Propiedades ocupadas</p>
         </div>
-        <div className="bg-white p-4 rounded-xl border border-zinc-200/80 shadow-xs flex items-center gap-4">
-          <div className="h-10 w-10 rounded-lg bg-sky-50 flex items-center justify-center">
-            <Car className="h-5 w-5 text-sky-600" />
-          </div>
-          <div>
-            <p className="text-2xl font-bold tracking-tight">{totalVehicles}</p>
-            <p className="text-xs text-zinc-500">Vehículos Autorizados</p>
-          </div>
+        <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-xs">
+          <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">Vehículos Autorizados</p>
+          <p className="mt-2 text-3xl font-semibold tracking-tight text-zinc-900 tabular-nums">{totalVehicles}</p>
+          <p className="mt-1 text-xs text-zinc-400">Marbetes vigentes</p>
         </div>
       </div>
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Propiedades</h1>
+      <div className="flex flex-col gap-0.5">
+        <h1 className="text-xl font-semibold tracking-tight text-zinc-900">Propiedades</h1>
+        <p className="text-sm text-zinc-500">Directorio de unidades, ocupación y asignaciones.</p>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-2.5 top-[10px] h-4 w-4 text-zinc-400" />
+          <Input 
+            placeholder="Buscar por identificador..." 
+            className="h-9 pl-8 text-sm" 
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+        <Select onValueChange={(val) => setFilters(prev => ({...prev, tipo: val === 'ALL' ? '' : val}))}>
+          <SelectTrigger className="h-9 w-[170px] text-sm">
+            <SelectValue placeholder="Todos los tipos" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">Todos los tipos</SelectItem>
+            <SelectItem value="CASA">Casa</SelectItem>
+            <SelectItem value="APARTAMENTO">Apartamento</SelectItem>
+            <SelectItem value="LOTE">Lote</SelectItem>
+            <SelectItem value="LOCAL_COMERCIAL">Local Comercial</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select onValueChange={(val) => setFilters(prev => ({...prev, estado: val === 'ALL' ? '' : val}))}>
+          <SelectTrigger className="h-9 w-[170px] text-sm">
+            <SelectValue placeholder="Todos los estados" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">Todos los estados</SelectItem>
+            <SelectItem value="OCUPADA">Ocupada</SelectItem>
+            <SelectItem value="DESOCUPADA">Desocupada</SelectItem>
+            <SelectItem value="EN_CONSTRUCCION">En Construcción</SelectItem>
+          </SelectContent>
+        </Select>
+        <div className="ml-auto">
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
-            <Button><Plus className="w-4 h-4 mr-2" /> Nueva Propiedad</Button>
+            <Button className="h-9 bg-zinc-900 text-white hover:bg-zinc-800"><Plus className="mr-1.5 h-4 w-4" />Nueva Propiedad</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Registrar Nueva Propiedad</DialogTitle>
             </DialogHeader>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmitCreate)} className="space-y-4">
+              <form onSubmit={form.handleSubmit(onSubmitCreate)} className="space-y-5">
                 <FormField control={form.control} name="identificador" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Identificador (ej. Casa A-12)</FormLabel>
-                    <FormControl><Input {...field} /></FormControl>
+                    <FormLabel className="text-xs font-medium text-zinc-700">Identificador (ej. Casa A-12)</FormLabel>
+                    <FormControl><Input className="h-9 text-sm" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
                 <FormField control={form.control} name="tipo" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Tipo</FormLabel>
+                    <FormLabel className="text-xs font-medium text-zinc-700">Tipo</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger><SelectValue placeholder="Seleccione un tipo" /></SelectTrigger>
@@ -176,7 +199,7 @@ export default function PropiedadesPage() {
                 )} />
                 <FormField control={form.control} name="estado" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Estado</FormLabel>
+                    <FormLabel className="text-xs font-medium text-zinc-700">Estado</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger><SelectValue placeholder="Seleccione estado" /></SelectTrigger>
@@ -192,54 +215,20 @@ export default function PropiedadesPage() {
                 )} />
                 <FormField control={form.control} name="area_m2" render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Área m² (Opcional)</FormLabel>
-                    <FormControl><Input type="number" {...field} /></FormControl>
+                    <FormLabel className="text-xs font-medium text-zinc-700">Área m² (Opcional)</FormLabel>
+                    <FormControl><Input type="number" className="h-9 text-sm" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )} />
-                <Button type="submit" className="w-full">Guardar Propiedad</Button>
+                <Button type="submit" className="h-9 w-full">Guardar Propiedad</Button>
               </form>
             </Form>
           </DialogContent>
         </Dialog>
-      </div>
-
-      <div className="flex space-x-4">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-          <Input 
-            placeholder="Buscar por identificador..." 
-            className="pl-8" 
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
         </div>
-        <Select onValueChange={(val) => setFilters(prev => ({...prev, tipo: val === 'ALL' ? '' : val}))}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Todos los tipos" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="ALL">Todos los tipos</SelectItem>
-            <SelectItem value="CASA">Casa</SelectItem>
-            <SelectItem value="APARTAMENTO">Apartamento</SelectItem>
-            <SelectItem value="LOTE">Lote</SelectItem>
-            <SelectItem value="LOCAL_COMERCIAL">Local Comercial</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select onValueChange={(val) => setFilters(prev => ({...prev, estado: val === 'ALL' ? '' : val}))}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Todos los estados" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="ALL">Todos los estados</SelectItem>
-            <SelectItem value="OCUPADA">Ocupada</SelectItem>
-            <SelectItem value="DESOCUPADA">Desocupada</SelectItem>
-            <SelectItem value="EN_CONSTRUCCION">En Construcción</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
-      <div className="border border-zinc-200 bg-white dark:bg-zinc-950 dark:border-zinc-800 rounded-xl shadow-sm overflow-hidden">
+      <div className="overflow-hidden rounded-xl border border-zinc-200/80 bg-white shadow-xs">
         <Table>
           <TableHeader>
             <TableRow>
@@ -253,13 +242,13 @@ export default function PropiedadesPage() {
           </TableHeader>
           <TableBody>
             {loading ? (
-              <TableRow><TableCell colSpan={6} className="text-center py-8">Cargando propiedades...</TableCell></TableRow>
+              <TableRow><TableCell colSpan={6} className="py-8 text-center text-sm text-zinc-500">Cargando propiedades...</TableCell></TableRow>
             ) : filteredProperties.length === 0 ? (
-              <TableRow><TableCell colSpan={6} className="text-center py-8">No se encontraron propiedades.</TableCell></TableRow>
+              <TableRow><TableCell colSpan={6} className="py-8 text-center text-sm text-zinc-500">No se encontraron propiedades.</TableCell></TableRow>
             ) : (
               filteredProperties.map((prop) => (
                 <TableRow key={prop.id}>
-                  <TableCell className="font-medium">{prop.identificador}</TableCell>
+                  <TableCell className="font-medium text-zinc-900 tabular-nums">{prop.identificador}</TableCell>
                   <TableCell>{prop.tipo}</TableCell>
                   <TableCell>
                     {statusBadge(prop.estado)}

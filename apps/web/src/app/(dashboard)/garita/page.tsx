@@ -228,15 +228,15 @@ export default function GaritaConsolePage() {
 
     if (scanResult.estado === 'VALIDO') {
       return (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-6 text-center space-y-4">
-          <CheckCircle2 className="w-16 h-16 text-emerald-500 mx-auto" />
-          <h3 className="text-2xl font-bold text-emerald-700">ACCESO AUTORIZADO</h3>
-          <div className="text-left bg-white p-4 rounded-lg shadow-sm">
+        <div className="bg-emerald-50/90 border-2 border-emerald-500 rounded-xl p-6 text-center space-y-4">
+          <CheckCircle2 className="w-12 h-12 text-emerald-600 mx-auto" />
+          <h3 className="text-2xl font-semibold tracking-tight text-emerald-800">ACCESO AUTORIZADO</h3>
+          <div className="text-left bg-white p-4 rounded-lg border border-zinc-200/70 text-sm tabular-nums space-y-1">
             <p><strong>Visitante:</strong> {scanResult.pass?.nombre_visitante}</p>
             <p><strong>Propiedad:</strong> {scanResult.pass?.propiedad?.identificador}</p>
             {scanResult.pass?.vehiculo_placa && <p><strong>Placa:</strong> {scanResult.pass.vehiculo_placa}</p>}
           </div>
-          <Button className="w-full min-h-[56px] text-lg bg-emerald-600 hover:bg-emerald-700" onClick={() => registerEntry(scanResult.pass.id)}>
+          <Button className="w-full min-h-[56px] text-base bg-zinc-900 text-white hover:bg-zinc-800" onClick={() => registerEntry(scanResult.pass.id)}>
             Registrar Entrada
           </Button>
         </div>
@@ -245,17 +245,17 @@ export default function GaritaConsolePage() {
 
     if (scanResult.estado === 'ANFITRION_MOROSO') {
       return (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 text-center space-y-4">
-          <AlertTriangle className="w-16 h-16 text-amber-500 mx-auto" />
-          <h3 className="text-2xl font-bold text-amber-700">ADVERTENCIA: RESIDENTE EN MORA</h3>
+        <div className="bg-amber-50/90 border-2 border-amber-500 rounded-xl p-6 text-center space-y-4">
+          <AlertTriangle className="w-12 h-12 text-amber-600 mx-auto" />
+          <h3 className="text-2xl font-semibold tracking-tight text-amber-800">ADVERTENCIA: RESIDENTE EN MORA</h3>
           <p className="text-amber-800">{scanResult.mensaje}</p>
-          <div className="text-left bg-white p-4 rounded-lg shadow-sm">
+          <div className="text-left bg-white p-4 rounded-lg border border-zinc-200/70 text-sm tabular-nums space-y-1">
             <p><strong>Visitante:</strong> {scanResult.pass?.nombre_visitante}</p>
             <p><strong>Propiedad:</strong> {scanResult.pass?.propiedad?.identificador}</p>
           </div>
           <div className="flex gap-4">
-            <Button variant="outline" className="flex-1 min-h-[56px]" onClick={() => setScanResult(null)}>Rechazar</Button>
-            <Button className="flex-1 min-h-[56px] bg-amber-600 hover:bg-amber-700" onClick={() => registerEntry(scanResult.pass.id)}>
+            <Button variant="outline" className="flex-1 min-h-[56px] bg-white" onClick={() => setScanResult(null)}>Rechazar</Button>
+            <Button className="flex-1 min-h-[56px] bg-zinc-900 text-white hover:bg-zinc-800" onClick={() => registerEntry(scanResult.pass.id)}>
               Ingresar con Advertencia
             </Button>
           </div>
@@ -264,9 +264,9 @@ export default function GaritaConsolePage() {
     }
 
     return (
-      <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-center space-y-4">
-        <XCircle className="w-16 h-16 text-red-500 mx-auto" />
-        <h3 className="text-2xl font-bold text-red-700">ACCESO DENEGADO</h3>
+      <div className="bg-red-50/90 border-2 border-red-500 rounded-xl p-6 text-center space-y-4">
+        <XCircle className="w-12 h-12 text-red-600 mx-auto" />
+        <h3 className="text-2xl font-semibold tracking-tight text-red-800">ACCESO DENEGADO</h3>
         <p className="text-red-800 text-lg">{scanResult.mensaje}</p>
         <Button variant="outline" className="w-full min-h-[48px]" onClick={() => setScanResult(null)}>Volver a escanear</Button>
       </div>
@@ -277,47 +277,50 @@ export default function GaritaConsolePage() {
     <div className="space-y-6 max-w-5xl mx-auto pb-20">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-zinc-900">Consola de Garita</h1>
+          <h1 className="text-xl font-semibold tracking-tight text-zinc-900">Consola de Garita</h1>
           <p className="text-sm text-zinc-500 mt-1">Control de acceso vehicular y peatonal.</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="bg-white border-zinc-200 shadow-sm min-h-[48px]" onClick={() => setIsCallModalOpen(true)}>
-            <Phone className="mr-2 w-5 h-5" /> Verificar con Residente
+          <Button variant="outline" className="bg-white border-zinc-200 shadow-2xs min-h-[48px]" onClick={() => setIsCallModalOpen(true)}>
+            <Phone className="mr-2 h-4 w-4" /> Verificar con Residente
           </Button>
         </div>
       </div>
 
-      <div className="flex gap-4 border-b border-zinc-200">
+      <div role="tablist" className="inline-flex rounded-lg bg-zinc-100/80 p-1">
         <button
-          className={`pb-3 text-lg font-medium border-b-4 transition-colors px-4 ${activeTab === 'ESCANER' ? 'border-zinc-900 text-zinc-900' : 'border-transparent text-zinc-500'}`}
+          role="tab"
+          aria-selected={activeTab === 'ESCANER'}
+          className={`flex min-h-[44px] items-center rounded-md px-5 text-sm font-medium transition-colors ${activeTab === 'ESCANER' ? 'bg-white text-zinc-900 shadow-xs' : 'text-zinc-500 hover:text-zinc-700'}`}
           onClick={() => setActiveTab('ESCANER')}
         >
-          <QrCode className="inline-block w-5 h-5 mr-2" /> Escáner QR
+          <QrCode className="mr-2 h-4 w-4" /> Escáner QR
         </button>
         <button
-          className={`pb-3 text-lg font-medium border-b-4 transition-colors px-4 ${activeTab === 'DELIVERIES' ? 'border-zinc-900 text-zinc-900' : 'border-transparent text-zinc-500'}`}
+          role="tab"
+          aria-selected={activeTab === 'DELIVERIES'}
+          className={`flex min-h-[44px] items-center rounded-md px-5 text-sm font-medium transition-colors ${activeTab === 'DELIVERIES' ? 'bg-white text-zinc-900 shadow-xs' : 'text-zinc-500 hover:text-zinc-700'}`}
           onClick={() => setActiveTab('DELIVERIES')}
         >
-          <Package className="inline-block w-5 h-5 mr-2" /> Deliveries ({deliveries.length})
+          <Package className="mr-2 h-4 w-4" /> Deliveries <span className="ml-1.5 tabular-nums">({deliveries.length})</span>
         </button>
       </div>
-
       {activeTab === 'ESCANER' && (
-        <Card className="bg-white shadow-xs rounded-2xl overflow-hidden border-zinc-200">
+        <Card className="bg-white rounded-2xl overflow-hidden border-zinc-200/80">
           <CardContent className="p-6 sm:p-10">
             {!scanResult && (
               <div className="max-w-md mx-auto space-y-8">
                 <form onSubmit={handleQRSubmit} className="space-y-4">
-                  <Label className="text-lg">Código del Pase (Lector USB / Manual)</Label>
+                  <Label className="text-sm font-medium text-zinc-700">Código del Pase (Lector USB / Manual)</Label>
                   <div className="flex gap-2">
                     <Input 
                       autoFocus
                       placeholder="Ingrese o escanee el código..." 
-                      className="min-h-[56px] text-lg"
+                      className="min-h-[56px] text-base"
                       value={qrToken}
                       onChange={(e) => setQrToken(e.target.value)}
                     />
-                    <Button type="submit" className="min-h-[56px] px-8">Validar</Button>
+                    <Button type="submit" className="min-h-[56px] bg-zinc-900 px-8 text-white hover:bg-zinc-800">Validar</Button>
                   </div>
                 </form>
 
@@ -327,13 +330,13 @@ export default function GaritaConsolePage() {
                 </div>
 
                 {!isScanning ? (
-                  <Button variant="secondary" className="w-full min-h-[64px] text-lg" onClick={startCameraScan}>
-                    <QrCode className="w-6 h-6 mr-2" /> Activar Cámara de la Tablet
+                  <Button className="w-full min-h-[64px] bg-zinc-900 text-base text-white hover:bg-zinc-800" onClick={startCameraScan}>
+                    <QrCode className="mr-2 h-5 w-5" /> Activar Cámara de la Tablet
                   </Button>
                 ) : (
                   <div className="space-y-4">
-                    <div id="qr-reader" className="w-full overflow-hidden rounded-xl border-2 border-zinc-200" />
-                    <Button variant="destructive" className="w-full min-h-[48px]" onClick={stopCameraScan}>Cancelar Escaneo</Button>
+                    <div id="qr-reader" className="w-full overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950" />
+                    <Button variant="outline" className="w-full min-h-[48px] hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600" onClick={stopCameraScan}>Cancelar Escaneo</Button>
                   </div>
                 )}
               </div>
@@ -345,17 +348,16 @@ export default function GaritaConsolePage() {
       )}
 
       {activeTab === 'DELIVERIES' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {deliveries.map(delivery => (
-            <Card key={delivery.id} className="bg-white border-emerald-100 shadow-sm rounded-xl overflow-hidden relative">
-              <div className="absolute top-0 left-0 w-2 h-full bg-emerald-500"></div>
-              <CardContent className="p-6 pl-8 flex flex-col justify-between h-full space-y-4">
+            <Card key={delivery.id} className="overflow-hidden rounded-xl border-zinc-200/80 bg-white">
+              <CardContent className="p-6 flex flex-col justify-between h-full space-y-4">
                 <div>
-                  <h3 className="text-xl font-bold">{delivery.descripcion}</h3>
-                  <p className="text-zinc-600 mt-1">Hacia: <strong>{delivery.propiedad?.identificador}</strong></p>
+                  <h3 className="text-base font-semibold text-zinc-900">{delivery.descripcion}</h3>
+                  <p className="mt-1 text-sm text-zinc-600">Hacia: <strong className="font-medium text-zinc-900 tabular-nums">{delivery.propiedad?.identificador}</strong></p>
                   <p className="text-sm text-zinc-500 mt-2">Repartidor: {delivery.nombre_repartidor || 'No especificado'}</p>
                 </div>
-                <Button className="w-full min-h-[48px] bg-emerald-600 hover:bg-emerald-700" onClick={() => registerDelivery(delivery.id)}>
+                <Button className="w-full min-h-[48px] bg-zinc-800 text-white hover:bg-zinc-700" onClick={() => registerDelivery(delivery.id)}>
                   Registrar Ingreso de Delivery
                 </Button>
               </CardContent>
@@ -364,7 +366,7 @@ export default function GaritaConsolePage() {
           {deliveries.length === 0 && (
             <div className="col-span-full py-12 text-center text-zinc-500">
               <Package className="w-12 h-12 mx-auto mb-3 opacity-20" />
-              <p className="text-lg">No hay deliveries esperados en este momento.</p>
+              <p className="text-sm">No hay deliveries esperados en este momento.</p>
             </div>
           )}
         </div>
@@ -379,7 +381,7 @@ export default function GaritaConsolePage() {
       >
         <DialogContent className="sm:max-w-[480px]">
           <DialogHeader>
-            <DialogTitle className="text-2xl">Verificación por Llamada</DialogTitle>
+            <DialogTitle className="text-lg">Verificación por Llamada</DialogTitle>
             <DialogDescription>Si el visitante no tiene QR, busca la propiedad para contactar al residente.</DialogDescription>
           </DialogHeader>
           <div className="space-y-6 py-4">
@@ -463,8 +465,8 @@ export default function GaritaConsolePage() {
                   <Input className="min-h-[48px]" value={visitorName} onChange={(e) => setVisitorName(e.target.value)} />
                   
                   <div className="flex gap-4 pt-4">
-                    <Button variant="destructive" className="flex-1 min-h-[56px] text-lg" onClick={() => registerCallAuth(false)}>Denegar Ingreso</Button>
-                    <Button className="flex-1 min-h-[56px] text-lg bg-emerald-600 hover:bg-emerald-700" onClick={() => registerCallAuth(true)}>Autorizar Ingreso</Button>
+                    <Button variant="outline" className="flex-1 min-h-[56px] text-base hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600" onClick={() => registerCallAuth(false)}>Denegar Ingreso</Button>
+                    <Button className="flex-1 min-h-[56px] text-base bg-zinc-900 text-white hover:bg-zinc-800" onClick={() => registerCallAuth(true)}>Autorizar Ingreso</Button>
                   </div>
                 </div>
               </div>
@@ -473,15 +475,15 @@ export default function GaritaConsolePage() {
         </DialogContent>
       </Dialog>
       <Dialog open={!!successMessage} onOpenChange={() => setSuccessMessage('')}>
-        <DialogContent className="sm:max-w-[400px] text-center p-8 border-emerald-100">
-          <div className="mx-auto w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-4">
-            <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+        <DialogContent className="sm:max-w-[400px] text-center p-8">
+          <div className="mx-auto w-12 h-12 bg-emerald-50 border border-emerald-200/60 rounded-full flex items-center justify-center mb-4">
+            <CheckCircle2 className="w-6 h-6 text-emerald-600" />
           </div>
-          <DialogTitle className="text-2xl font-bold text-zinc-900 mb-2">¡Operación Exitosa!</DialogTitle>
-          <DialogDescription className="text-zinc-600 text-base mb-6">
+          <DialogTitle className="text-lg font-semibold tracking-tight text-zinc-900 mb-2">¡Operación Exitosa!</DialogTitle>
+          <DialogDescription className="text-zinc-500 text-sm mb-6">
             {successMessage}
           </DialogDescription>
-          <Button className="w-full min-h-[48px] bg-emerald-600 hover:bg-emerald-700" onClick={() => setSuccessMessage('')}>
+          <Button className="w-full min-h-[48px] bg-zinc-900 text-white hover:bg-zinc-800" onClick={() => setSuccessMessage('')}>
             Aceptar
           </Button>
         </DialogContent>

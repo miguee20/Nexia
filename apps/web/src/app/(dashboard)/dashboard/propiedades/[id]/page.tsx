@@ -134,15 +134,19 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
   if (!property) return <div className="p-6">Propiedad no encontrada</div>;
 
   return (
-    <div className="p-6 space-y-6">
-      <Button variant="ghost" onClick={() => router.push('/dashboard/propiedades')} className="mb-4">
-        <ArrowLeft className="w-4 h-4 mr-2" /> Volver a Propiedades
-      </Button>
+    <div className="space-y-6">
+      <nav className="flex items-center gap-1.5 text-xs text-zinc-500">
+        <Button variant="ghost" size="sm" onClick={() => router.push('/dashboard/propiedades')} className="-ml-2 h-7 gap-1 px-2 text-xs text-zinc-500 hover:text-zinc-900">
+          <ArrowLeft className="h-3.5 w-3.5" /> Propiedades
+        </Button>
+        <span className="text-zinc-300">/</span>
+        <span className="font-medium text-zinc-900 tabular-nums">{property.identificador}</span>
+      </nav>
 
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">{property.identificador}</h1>
-          <div className="flex gap-2 mt-2">
+          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">{property.identificador}</h1>
+          <div className="mt-2 flex items-center gap-2">
             <Badge variant="outline">{property.tipo}</Badge>
             {(() => {
               const estadoMap: Record<string, string> = {
@@ -152,7 +156,7 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
               };
               const cls = estadoMap[property.estado] || 'bg-zinc-100 text-zinc-600 border border-zinc-200';
               return (
-                <span className={`inline-flex items-center font-medium text-xs px-2.5 py-0.5 rounded-full ${cls}`}>
+                <span className={`inline-flex items-center font-medium text-xs px-2 py-0.5 rounded-md ${cls}`}>
                   {property.estado}
                 </span>
               );
@@ -162,25 +166,25 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
       </div>
 
       <Tabs defaultValue="general" className="w-full">
-        <TabsList>
-          <TabsTrigger value="general">Datos Generales y Residentes</TabsTrigger>
-          <TabsTrigger value="vehiculos">Vehículos y Marbetes</TabsTrigger>
+        <TabsList className="h-auto w-full justify-start gap-6 rounded-none border-b border-zinc-200/80 bg-transparent p-0">
+          <TabsTrigger value="general" className="rounded-none border-b-2 border-transparent bg-transparent px-0 pb-2.5 pt-1 text-sm font-medium text-zinc-500 shadow-none data-[state=active]:border-zinc-900 data-[state=active]:bg-transparent data-[state=active]:text-zinc-900 data-[state=active]:shadow-none">Datos Generales y Residentes</TabsTrigger>
+          <TabsTrigger value="vehiculos" className="rounded-none border-b-2 border-transparent bg-transparent px-0 pb-2.5 pt-1 text-sm font-medium text-zinc-500 shadow-none data-[state=active]:border-zinc-900 data-[state=active]:bg-transparent data-[state=active]:text-zinc-900 data-[state=active]:shadow-none">Vehículos y Marbetes</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="general" className="space-y-4 mt-4">
+        <TabsContent value="general" className="mt-6 space-y-4">
           <div className="flex justify-between items-center mb-2">
-            <h2 className="text-xl font-semibold">Residentes Asignados</h2>
+            <h2 className="text-sm font-semibold tracking-tight text-zinc-900">Residentes Asignados</h2>
             <Dialog open={isAssignOpen} onOpenChange={setIsAssignOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline"><Plus className="w-4 h-4 mr-2" /> Asignar Residente</Button>
+                <Button variant="outline" size="sm"><Plus className="mr-1.5 h-4 w-4" />Asignar Residente</Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>Asignar Residente</DialogTitle></DialogHeader>
                 <Form {...assignForm}>
-                  <form onSubmit={assignForm.handleSubmit(onSubmitAssign)} className="space-y-4">
+                  <form onSubmit={assignForm.handleSubmit(onSubmitAssign)} className="space-y-5">
                     <FormField control={assignForm.control} name="tipo_residencia" render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Rol en Propiedad</FormLabel>
+                        <FormLabel className="text-xs font-medium text-zinc-700">Rol en Propiedad</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl><SelectTrigger><SelectValue placeholder="Seleccione rol" /></SelectTrigger></FormControl>
                           <SelectContent>
@@ -193,7 +197,7 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
                     )} />
                     <FormField control={assignForm.control} name="userId" render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Usuario (Residente)</FormLabel>
+                        <FormLabel className="text-xs font-medium text-zinc-700">Usuario (Residente)</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl><SelectTrigger><SelectValue placeholder="Seleccione un residente" /></SelectTrigger></FormControl>
                           <SelectContent>
@@ -205,74 +209,76 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
                         <FormMessage />
                       </FormItem>
                     )} />
-                    <Button type="submit" className="w-full">Asignar a Propiedad</Button>
+                    <Button type="submit" className="h-9 w-full">Asignar a Propiedad</Button>
                   </form>
                 </Form>
               </DialogContent>
             </Dialog>
           </div>
 
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Card>
-            <CardHeader><CardTitle>Propietario</CardTitle></CardHeader>
+            <CardHeader className="pb-3"><CardTitle className="text-xs font-medium uppercase tracking-wider text-zinc-500">Propietario</CardTitle></CardHeader>
             <CardContent>
               {property.propietario ? (
                 <div>
-                  <p className="font-semibold">{property.propietario.nombre_completo}</p>
-                  <p className="text-sm text-gray-500">{property.propietario.email}</p>
-                  <p className="text-sm text-gray-500">{property.propietario.telefono}</p>
+                  <p className="text-sm font-medium text-zinc-900">{property.propietario.nombre_completo}</p>
+                  <p className="text-sm text-zinc-500">{property.propietario.email}</p>
+                  <p className="text-sm text-zinc-500">{property.propietario.telefono}</p>
                 </div>
               ) : (
-                <p className="text-sm text-gray-500">Sin propietario asignado.</p>
+                <p className="text-sm text-zinc-500">Sin propietario asignado.</p>
               )}
             </CardContent>
           </Card>
           <Card>
-            <CardHeader><CardTitle>Inquilino</CardTitle></CardHeader>
+            <CardHeader className="pb-3"><CardTitle className="text-xs font-medium uppercase tracking-wider text-zinc-500">Inquilino</CardTitle></CardHeader>
             <CardContent>
               {property.inquilino ? (
                 <div>
-                  <p className="font-semibold">{property.inquilino.nombre_completo}</p>
-                  <p className="text-sm text-gray-500">{property.inquilino.email}</p>
-                  <p className="text-sm text-gray-500">{property.inquilino.telefono}</p>
+                  <p className="text-sm font-medium text-zinc-900">{property.inquilino.nombre_completo}</p>
+                  <p className="text-sm text-zinc-500">{property.inquilino.email}</p>
+                  <p className="text-sm text-zinc-500">{property.inquilino.telefono}</p>
                 </div>
               ) : (
-                <p className="text-sm text-gray-500">Sin inquilino asignado.</p>
+                <p className="text-sm text-zinc-500">Sin inquilino asignado.</p>
               )}
             </CardContent>
           </Card>
+          </div>
         </TabsContent>
 
-        <TabsContent value="vehiculos" className="space-y-4 mt-4">
+        <TabsContent value="vehiculos" className="mt-6 space-y-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold">Vehículos Registrados</h2>
+            <h2 className="text-sm font-semibold tracking-tight text-zinc-900">Vehículos Registrados</h2>
             <Dialog open={isVehicleOpen} onOpenChange={setIsVehicleOpen}>
               <DialogTrigger asChild>
-                <Button><Plus className="w-4 h-4 mr-2" /> Registrar Vehículo</Button>
+                <Button size="sm"><Plus className="mr-1.5 h-4 w-4" />Registrar Vehículo</Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Registrar Vehículo</DialogTitle>
                 </DialogHeader>
                 <Form {...vehicleForm}>
-                  <form onSubmit={vehicleForm.handleSubmit(onSubmitVehicle)} className="space-y-4">
+                  <form onSubmit={vehicleForm.handleSubmit(onSubmitVehicle)} className="space-y-5">
                     <FormField control={vehicleForm.control} name="placa" render={({ field }) => (
-                      <FormItem><FormLabel>Placa</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                      <FormItem><FormLabel className="text-xs font-medium text-zinc-700">Placa</FormLabel><FormControl><Input className="h-9 text-sm" {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
                     <div className="grid grid-cols-2 gap-4">
                       <FormField control={vehicleForm.control} name="marca" render={({ field }) => (
-                        <FormItem><FormLabel>Marca</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                        <FormItem><FormLabel className="text-xs font-medium text-zinc-700">Marca</FormLabel><FormControl><Input className="h-9 text-sm" {...field} /></FormControl><FormMessage /></FormItem>
                       )} />
                       <FormField control={vehicleForm.control} name="color" render={({ field }) => (
-                        <FormItem><FormLabel>Color</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                        <FormItem><FormLabel className="text-xs font-medium text-zinc-700">Color</FormLabel><FormControl><Input className="h-9 text-sm" {...field} /></FormControl><FormMessage /></FormItem>
                       )} />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <FormField control={vehicleForm.control} name="modelo" render={({ field }) => (
-                        <FormItem><FormLabel>Modelo (Año)</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                        <FormItem><FormLabel className="text-xs font-medium text-zinc-700">Modelo (Año)</FormLabel><FormControl><Input className="h-9 text-sm" {...field} /></FormControl><FormMessage /></FormItem>
                       )} />
                       <FormField control={vehicleForm.control} name="tipo" render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Tipo</FormLabel>
+                          <FormLabel className="text-xs font-medium text-zinc-700">Tipo</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl><SelectTrigger><SelectValue placeholder="Seleccione" /></SelectTrigger></FormControl>
                             <SelectContent>
@@ -285,14 +291,14 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
                         </FormItem>
                       )} />
                     </div>
-                    <Button type="submit" className="w-full">Guardar Vehículo</Button>
+                    <Button type="submit" className="h-9 w-full">Guardar Vehículo</Button>
                   </form>
                 </Form>
               </DialogContent>
             </Dialog>
           </div>
 
-          <div className="border border-zinc-200 bg-white dark:bg-zinc-950 dark:border-zinc-800 rounded-xl shadow-sm overflow-hidden mt-4">
+          <div className="overflow-hidden rounded-xl border border-zinc-200/80 bg-white shadow-xs">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -312,16 +318,16 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
                     const activeMarbete = marbetes.find(m => m.vehiculo_id === v.id && m.estado === 'ACTIVO');
                     return (
                       <TableRow key={v.id}>
-                        <TableCell className="font-medium">{v.placa}</TableCell>
+                        <TableCell className="font-medium text-zinc-900 tabular-nums">{v.placa}</TableCell>
                         <TableCell>{v.marca} {v.modelo ? `(${v.modelo})` : ''}</TableCell>
                         <TableCell>{v.color}</TableCell>
                         <TableCell>{v.tipo}</TableCell>
                         <TableCell>
                           {activeMarbete ? (
                             <div className="flex flex-col gap-1 items-start">
-                              <span className="text-sm font-semibold">{activeMarbete.codigo}</span>
+                              <span className="text-sm font-medium text-zinc-900 tabular-nums">{activeMarbete.codigo}</span>
                               <div className="flex gap-1">
-                                <span className="inline-flex items-center font-medium text-xs px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60">Activo</span>
+                                <span className="inline-flex items-center font-medium text-xs px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200/60">Activo</span>
                                 {activeMarbete.es_extra ? <Badge variant="destructive">Extra</Badge> : <Badge variant="secondary">Incluido</Badge>}
                               </div>
                             </div>
@@ -331,7 +337,7 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
                         </TableCell>
                         <TableCell>
                           {activeMarbete ? (
-                            <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 dark:border-red-900/50 dark:hover:bg-red-950/50" onClick={() => setMarbeteToCancel(activeMarbete.id)}>
+                            <Button variant="outline" size="sm" className="text-zinc-700 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600" onClick={() => setMarbeteToCancel(activeMarbete.id)}>
                               <Ban className="w-4 h-4 mr-1" /> Cancelar
                             </Button>
                           ) : (

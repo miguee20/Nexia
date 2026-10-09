@@ -275,9 +275,9 @@ export default function VisitasPage() {
 
   const getStatusBadge = (estado: string) => {
     switch (estado) {
-      case 'ACTIVO': return <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100">Activo</Badge>;
-      case 'USADO': return <Badge className="bg-zinc-100 text-zinc-800 hover:bg-zinc-100">Usado</Badge>;
-      case 'EXPIRADO': return <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Expirado</Badge>;
+      case 'ACTIVO': return <Badge variant="success">Activo</Badge>;
+      case 'USADO': return <Badge variant="neutral">Usado</Badge>;
+      case 'EXPIRADO': return <Badge variant="destructive">Expirado</Badge>;
       default: return <Badge>{estado}</Badge>;
     }
   };
@@ -286,55 +286,59 @@ export default function VisitasPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-zinc-900">Control de Accesos</h1>
+          <h1 className="text-xl font-semibold tracking-tight text-zinc-900">Control de Accesos</h1>
           <p className="text-sm text-zinc-500 mt-1">Gestiona tus visitas y entregas esperadas.</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="bg-white" onClick={() => setIsDeliveryModalOpen(true)}>
+          <Button variant="outline" size="sm" className="h-9 bg-white text-zinc-900" onClick={() => setIsDeliveryModalOpen(true)}>
             <Package className="mr-2 h-4 w-4" /> Espero Delivery
           </Button>
-          <Button onClick={() => setIsVisitModalOpen(true)}>
+          <Button size="sm" className="h-9" onClick={() => setIsVisitModalOpen(true)}>
             <Plus className="mr-2 h-4 w-4" /> Generar Pase QR
           </Button>
         </div>
       </div>
 
-      <div className="flex gap-4 border-b border-zinc-200">
+      <div role="tablist" className="inline-flex rounded-lg bg-zinc-100/80 p-1">
         <button
-          className={`pb-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'VISITAS' ? 'border-zinc-900 text-zinc-900' : 'border-transparent text-zinc-500 hover:text-zinc-700'}`}
+          role="tab"
+          aria-selected={activeTab === 'VISITAS'}
+          className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${activeTab === 'VISITAS' ? 'bg-white text-zinc-900 shadow-xs' : 'text-zinc-500 hover:text-zinc-700'}`}
           onClick={() => setActiveTab('VISITAS')}
         >
           Mis Pases de Visita
         </button>
         <button
-          className={`pb-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'DELIVERIES' ? 'border-zinc-900 text-zinc-900' : 'border-transparent text-zinc-500 hover:text-zinc-700'}`}
+          role="tab"
+          aria-selected={activeTab === 'DELIVERIES'}
+          className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${activeTab === 'DELIVERIES' ? 'bg-white text-zinc-900 shadow-xs' : 'text-zinc-500 hover:text-zinc-700'}`}
           onClick={() => setActiveTab('DELIVERIES')}
         >
           Deliveries Esperados
         </button>
       </div>
-
       {activeTab === 'VISITAS' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {passes.map(pass => (
-            <Card key={pass.id} className="bg-white border-zinc-200/80 shadow-xs rounded-xl overflow-hidden">
+            <Card key={pass.id} className="overflow-hidden rounded-xl border-zinc-200/80 bg-white">
               <CardHeader className="pb-3 flex flex-row items-start justify-between">
                 <div>
-                  <CardTitle className="text-base">{pass.nombre_visitante}</CardTitle>
-                  <CardDescription className="mt-1">{pass.motivo}</CardDescription>
+                  <CardTitle className="text-sm font-semibold text-zinc-900">{pass.nombre_visitante}</CardTitle>
+                  <CardDescription className="mt-1 text-xs">{pass.motivo}</CardDescription>
                 </div>
                 {getStatusBadge(pass.estado)}
               </CardHeader>
               <CardContent>
-                <div className="text-sm text-zinc-600 mb-4 space-y-1">
-                  <div className="flex items-center gap-2"><Clock className="w-3.5 h-3.5" /> Expira: {new Date(pass.fecha_expiracion).toLocaleString()}</div>
-                  {pass.vehiculo_placa && <div className="flex items-center gap-2"><ShieldCheck className="w-3.5 h-3.5" /> Placa: {pass.vehiculo_placa}</div>}
+                <div className="mb-4 space-y-1.5 text-xs text-zinc-600 tabular-nums">
+                  <div className="flex items-center gap-2"><Clock className="h-3.5 w-3.5 text-zinc-400" /> Expira: {new Date(pass.fecha_expiracion).toLocaleString()}</div>
+                  {pass.vehiculo_placa && <div className="flex items-center gap-2"><ShieldCheck className="h-3.5 w-3.5 text-zinc-400" /> Placa: {pass.vehiculo_placa}</div>}
                 </div>
                 {pass.estado === 'ACTIVO' && (
                   <div className="flex gap-2">
                     <Button
-                      variant="secondary"
-                      className="flex-1"
+                      variant="outline"
+                      size="sm"
+                      className="h-8 flex-1 border-zinc-200 text-zinc-900 hover:bg-zinc-50"
                       onClick={() =>
                         setGeneratedQR({
                           token: pass.qr_token,
@@ -347,12 +351,12 @@ export default function VisitasPage() {
                         })
                       }
                     >
-                      <QrCode className="w-4 h-4 mr-2" /> Mostrar QR
+                      <QrCode className="mr-1.5 h-4 w-4" /> Mostrar QR
                     </Button>
                     <Button
                       variant="outline"
                       size="icon"
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+                      className="h-8 w-8 text-zinc-500 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600"
                       title="Cancelar pase"
                       onClick={() => setPassToCancel(pass)}
                     >
@@ -368,18 +372,18 @@ export default function VisitasPage() {
       )}
 
       {activeTab === 'DELIVERIES' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {deliveries.map(delivery => (
-            <Card key={delivery.id} className="bg-white border-zinc-200/80 shadow-xs rounded-xl">
+            <Card key={delivery.id} className="rounded-xl border-zinc-200/80 bg-white">
               <CardHeader className="pb-3 flex flex-row items-start justify-between">
                 <div>
-                  <CardTitle className="text-base flex items-center gap-2"><Package className="w-4 h-4 text-emerald-600" /> {delivery.descripcion}</CardTitle>
-                  <CardDescription className="mt-1">{delivery.nombre_repartidor || 'Repartidor no especificado'}</CardDescription>
+                  <CardTitle className="flex items-center gap-2 text-sm font-semibold text-zinc-900"><Package className="h-4 w-4 text-zinc-400" /> {delivery.descripcion}</CardTitle>
+                  <CardDescription className="mt-1 text-xs">{delivery.nombre_repartidor || 'Repartidor no especificado'}</CardDescription>
                 </div>
                 {getStatusBadge(delivery.estado)}
               </CardHeader>
               <CardContent>
-                <div className="text-sm text-zinc-600">
+                <div className="text-xs text-zinc-600 tabular-nums">
                   Válido hasta: {new Date(delivery.fecha_expiracion).toLocaleTimeString()}
                 </div>
               </CardContent>
@@ -397,20 +401,20 @@ export default function VisitasPage() {
             <DialogDescription>Completa los datos para autorizar el ingreso de tu visita.</DialogDescription>
           </DialogHeader>
           <Form {...visitForm}>
-            <form onSubmit={visitForm.handleSubmit(onSubmitVisit)} className="space-y-4">
+            <form onSubmit={visitForm.handleSubmit(onSubmitVisit)} className="space-y-5">
               <FormField control={visitForm.control} name="nombre_visitante" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nombre del Visitante</FormLabel>
-                  <FormControl><Input placeholder="Ej. Juan Pérez" {...field} /></FormControl>
+                  <FormLabel className="text-xs font-medium text-zinc-700">Nombre del Visitante</FormLabel>
+                  <FormControl><Input className="h-9 text-sm" placeholder="Ej. Juan Pérez" {...field} /></FormControl>
                   <FormMessage />
                 </FormItem>
               )} />
               <FormField control={visitForm.control} name="motivo" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Motivo</FormLabel>
+                  <FormLabel className="text-xs font-medium text-zinc-700">Motivo</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger><SelectValue placeholder="Selecciona un motivo" /></SelectTrigger>
+                      <SelectTrigger className="h-9 text-sm"><SelectValue placeholder="Selecciona un motivo" /></SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="VISITA_PERSONAL">Visita Personal</SelectItem>
@@ -423,15 +427,15 @@ export default function VisitasPage() {
               )} />
               <FormField control={visitForm.control} name="fecha_llegada" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Fecha/Hora de Llegada (Opcional)</FormLabel>
-                  <FormControl><Input type="datetime-local" {...field} /></FormControl>
+                  <FormLabel className="text-xs font-medium text-zinc-700">Fecha/Hora de Llegada (Opcional)</FormLabel>
+                  <FormControl><Input type="datetime-local" className="h-9 text-sm" {...field} /></FormControl>
                   <FormMessage />
                 </FormItem>
               )} />
               <FormField control={visitForm.control} name="vehiculo_placa" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Placa del Vehículo (Opcional)</FormLabel>
-                  <FormControl><Input placeholder="Ej. ABC-1234" {...field} /></FormControl>
+                  <FormLabel className="text-xs font-medium text-zinc-700">Placa del Vehículo (Opcional)</FormLabel>
+                  <FormControl><Input className="h-9 text-sm" placeholder="Ej. ABC-1234" {...field} /></FormControl>
                   <FormMessage />
                 </FormItem>
               )} />
@@ -452,18 +456,18 @@ export default function VisitasPage() {
             <DialogDescription>Avisa a garita que esperas un pedido (Uber Eats, PedidosYa, Amazon).</DialogDescription>
           </DialogHeader>
           <Form {...deliveryForm}>
-            <form onSubmit={deliveryForm.handleSubmit(onSubmitDelivery)} className="space-y-4">
+            <form onSubmit={deliveryForm.handleSubmit(onSubmitDelivery)} className="space-y-5">
               <FormField control={deliveryForm.control} name="descripcion" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Empresa / Pedido</FormLabel>
-                  <FormControl><Input placeholder="Ej. Uber Eats - Pizza" {...field} /></FormControl>
+                  <FormLabel className="text-xs font-medium text-zinc-700">Empresa / Pedido</FormLabel>
+                  <FormControl><Input className="h-9 text-sm" placeholder="Ej. Uber Eats - Pizza" {...field} /></FormControl>
                   <FormMessage />
                 </FormItem>
               )} />
               <FormField control={deliveryForm.control} name="nombre_repartidor" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nombre del Repartidor (Opcional)</FormLabel>
-                  <FormControl><Input placeholder="Ej. Carlos" {...field} /></FormControl>
+                  <FormLabel className="text-xs font-medium text-zinc-700">Nombre del Repartidor (Opcional)</FormLabel>
+                  <FormControl><Input className="h-9 text-sm" placeholder="Ej. Carlos" {...field} /></FormControl>
                   <FormMessage />
                 </FormItem>
               )} />
@@ -480,17 +484,17 @@ export default function VisitasPage() {
       <Dialog open={!!generatedQR} onOpenChange={(open) => !open && setGeneratedQR(null)}>
         <DialogContent className="sm:max-w-[420px] text-center">
           <DialogHeader>
-            <DialogTitle className="text-center text-xl">Pase de Ingreso</DialogTitle>
+            <DialogTitle className="text-center text-lg font-semibold">Pase de Ingreso</DialogTitle>
             <DialogDescription className="text-center">Muestra o comparte este pase para ingresar a garita</DialogDescription>
           </DialogHeader>
 
           {generatedQR && (
             <div className="space-y-4">
-              <div className="bg-zinc-50 border border-zinc-200/80 rounded-2xl p-5 flex flex-col items-center shadow-xs">
+              <div className="bg-zinc-50 border border-zinc-200/80 rounded-xl p-5 flex flex-col items-center">
                 {/* Visual Badge Card Header */}
                 <div className="w-full flex justify-between items-center text-xs font-semibold text-zinc-500 uppercase tracking-wider pb-3 border-b border-zinc-200">
                   <span>Nexia Pass</span>
-                  <span className="text-emerald-600 font-bold">{generatedQR.propiedad || 'Condominio'}</span>
+                  <span className="text-zinc-900 font-semibold">{generatedQR.propiedad || 'Condominio'}</span>
                 </div>
 
                 {/* QR Vector SVG (Crisp vector quality on screen) */}
@@ -518,12 +522,12 @@ export default function VisitasPage() {
                 <div className="w-full text-left space-y-1.5 text-sm pt-1">
                   <div className="flex justify-between">
                     <span className="text-zinc-500">Visitante:</span>
-                    <span className="font-semibold text-zinc-900">{generatedQR.nombre_visitante}</span>
+                    <span className="font-medium text-zinc-900">{generatedQR.nombre_visitante}</span>
                   </div>
                   {generatedQR.vehiculo_placa && (
                     <div className="flex justify-between">
                       <span className="text-zinc-500">Placa:</span>
-                      <span className="font-medium text-zinc-800">{generatedQR.vehiculo_placa}</span>
+                      <span className="font-medium text-zinc-800 tabular-nums">{generatedQR.vehiculo_placa}</span>
                     </div>
                   )}
                   <div className="flex justify-between">
@@ -532,7 +536,7 @@ export default function VisitasPage() {
                   </div>
                   <div className="flex justify-between text-xs text-emerald-700 bg-emerald-50 px-2.5 py-1.5 rounded-lg border border-emerald-100 mt-2">
                     <span>Vigencia:</span>
-                    <span className="font-semibold">{new Date(generatedQR.expiracion).toLocaleString()}</span>
+                    <span className="font-medium tabular-nums">{new Date(generatedQR.expiracion).toLocaleString()}</span>
                   </div>
                 </div>
               </div>
@@ -558,21 +562,21 @@ export default function VisitasPage() {
           </p>
           <div className="flex justify-end gap-3 pt-3">
             <Button variant="outline" onClick={() => setPassToCancel(null)}>Volver</Button>
-            <Button variant="destructive" onClick={confirmCancelPass}>Confirmar Cancelación</Button>
+            <Button variant="outline" className="border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700" onClick={confirmCancelPass}>Confirmar Cancelación</Button>
           </div>
         </DialogContent>
       </Dialog>
 
       <Dialog open={!!successMessage} onOpenChange={() => setSuccessMessage('')}>
-        <DialogContent className="sm:max-w-[400px] text-center p-8 border-emerald-100">
-          <div className="mx-auto w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-4">
-            <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+        <DialogContent className="sm:max-w-[400px] text-center p-8">
+          <div className="mx-auto w-12 h-12 bg-emerald-50 border border-emerald-200/60 rounded-full flex items-center justify-center mb-4">
+            <CheckCircle2 className="w-6 h-6 text-emerald-600" />
           </div>
-          <DialogTitle className="text-2xl font-bold text-zinc-900 mb-2">¡Operación Exitosa!</DialogTitle>
-          <DialogDescription className="text-zinc-600 text-base mb-6">
+          <DialogTitle className="text-lg font-semibold tracking-tight text-zinc-900 mb-2">¡Operación Exitosa!</DialogTitle>
+          <DialogDescription className="text-zinc-500 text-sm mb-6">
             {successMessage}
           </DialogDescription>
-          <Button className="w-full min-h-[48px] bg-emerald-600 hover:bg-emerald-700" onClick={() => setSuccessMessage('')}>
+          <Button className="w-full min-h-[44px] bg-zinc-900 text-white hover:bg-zinc-800" onClick={() => setSuccessMessage('')}>
             Aceptar
           </Button>
         </DialogContent>
