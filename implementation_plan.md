@@ -907,6 +907,7 @@ erDiagram
 ### Fase 4 — Módulo Financiero
 **Duración estimada:** 5-7 días
 **Entregable:** Ciclo completo de cuotas → pago → conciliación → estado de cuenta.
+**Reglas Críticas:** Obligatorio usar `Prisma.$transaction` (All-or-Nothing) para movimientos, y tipos `Decimal` / `decimal.js` para cálculos (cero JS floats nativos).
 
 - [ ] Implementar `EmitFeesUseCase` (individual y masiva).
 - [ ] Implementar lógica de recargo automático por mora.

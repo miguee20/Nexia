@@ -102,6 +102,7 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 ## Fase 4 — Módulo Financiero
 - **Objetivo:** Desarrollar el motor de facturación interna, recargos automáticos por mora, conciliación de transferencias bancarias y generación de estados de cuenta y recibos.
 - **Entregable:** Ciclo financiero completo: emisión masiva de cuotas → carga de boleta por residente → conciliación/aprobación por admin → generación de recibos PDF y semáforo de morosidad.
+- **Reglas Críticas:** Obligatorio usar `Prisma.$transaction` (All-or-Nothing) para movimientos, y tipos `Decimal` / `decimal.js` para cálculos (cero JS floats nativos).
 - **Duración estimada:** 5-7 días.
 
 - [ ] Implementar `EmitFeesUseCase` (individual y masiva).

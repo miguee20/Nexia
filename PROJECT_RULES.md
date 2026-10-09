@@ -62,6 +62,10 @@ La API REST (`apps/api`) utiliza **Express 4.x** estructurado de manera estricta
 - **Motor de BD:** PostgreSQL 16 ejecutándose en contenedor Docker (`docker-compose.yml`).
 - **Aislamiento Multi-Tenant:** Patrón de Base de Datos Compartida con discriminador `condominio_id` (Tenant Discriminator). Cada consulta sensible a nivel de repositorio y middleware debe aplicar obligatoriamente el filtro de `condominio_id` para garantizar cero fuga de información entre condominios.
 
+### 1.6 Reglas Financieras y Transaccionales (Fase 4+)
+- **Precisión Matemática:** Queda estrictamente prohibido utilizar floats nativos de JavaScript (ej. `0.1 + 0.2`) para cálculos monetarios. Todo manejo de dinero en el backend debe hacerse utilizando tipos `Decimal` de Prisma y la librería `decimal.js` (o manejo en centavos exactos).
+- **Atomicidad (All-or-Nothing):** Todo flujo que involucre creación de pagos, alteración de balances o cambio de estados de cuotas DEBE ejecutarse dentro de una transacción (`Prisma.$transaction`). Si falla una actualización (ej. recibo), todo el pago debe revertirse automáticamente.
+
 ---
 
 ## 2. Reglas de Git, Commits y Código
