@@ -49,3 +49,12 @@ Thumbs.db
 .vscode/settings.json
 *.swp
 *.swo
+
+# ─── AI Harnesses & Local Agent Skills ─────────────────────────────────────────
+.claude/
+.cursor/
+.gemini/
+.github/skills/
+.github/agents/
+.github/hooks/
+*.exe

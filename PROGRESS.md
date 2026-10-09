@@ -10,6 +10,7 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 - [x] **Fase 1: Autenticación, Tenants y Modelo Base** (11 / 11 completadas)
 - [x] **Fase 2: Propiedades, Residentes, Vehículos y Marbetes** (10 / 10 completadas)
 - [x] **Fase 3: Módulo de Garita, Pases QR, Alertas de Delivery y Fallback** (19 / 19 completadas)
+- [x] **Refactor UI/UX: Rediseño Estético B2B (Tokens, Shell y Pantallas)** (2 / 2 bloques completados)
 - [ ] **Fase 4: Módulo Financiero** (0 / 11 completadas)
 - [ ] **Fase 5: Módulo de Amenidades** (0 / 6 completadas)
 - [ ] **Fase 6: Notificaciones, Pulido y Documentación** (0 / 8 completadas)
@@ -98,6 +99,54 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 - [x] Frontend (Residente): Revocación y cancelación de pases activos con modal de confirmación y descarga del pase en imagen PNG tipo credencial.
 - [x] Migración global: Reemplazo total de alerts y confirms por componentes Dialog y Toasts (sonner).
 - [x] Tests: Validación de QR expirado, QR ya usado, QR de moroso, alerta de delivery expirada, registro por llamada, cancelación de pase.
+
+---
+
+## Refactor UI/UX — Rediseño Estético B2B (Estilo Linear / Vercel)
+- **Objetivo:** Transformar la interfaz de usuario en un estándar de software B2B moderno, minimalista y profesional, eliminando la estética genérica de IA bajo las directrices de `DESIGN.md` e Impeccable (0 anti-patterns).
+- **Entregable:** Shell de navegación refinado, componentes primitivos con tokens sobrios HSL (paleta zinc), y rediseño integral de las pantallas clave de la aplicación sin alterar la lógica de negocio ni endpoints.
+- **Estado:** Completado y verificado con `impeccable detect` (0 anti-patterns) y `npm run type-check` (0 errores).
+
+### Bloque UI-1: Tokens, Layout Shell y Componentes Primitivos
+- [x] **Tokens y Browser Surfaces (`globals.css` & `tailwind.config.ts`):**
+  - Scrollbars ultrafinos personalizados con thumb `bg-zinc-300 hover:bg-zinc-400 rounded-full`.
+  - Selección de texto sobria en `selection:bg-zinc-900 selection:text-white`.
+  - Paleta HSL en escala Zinc: fondo canvas `zinc-50`, superficies primarias blancas, bordes nítidos `border-zinc-200/70`.
+  - Extensiones Tailwind para compatibilidad: `shadow-2xs`, `shadow-xs`, `backdrop-blur-xs`.
+- [x] **Componentes Primitivos (`components/ui/*`):**
+  - `button.tsx`: Alturas ergonómicas (h-9 default, h-8 sm), micro-elevación `shadow-2xs`, variantes sobrias en `zinc-900` y outlines con micro-bordes.
+  - `card.tsx`: Elevación sutil basada en bordes `border-zinc-200/70 shadow-[0_1px_2px_rgba(0,0,0,0.03)] rounded-xl`.
+  - `badge.tsx`: Nuevas variantes semánticas suaves (`success`, `warning`, `neutral`) preservando compatibilidad regresiva.
+  - `input.tsx` & `select.tsx`: Altura `h-9`, bordes sutiles `border-zinc-200` y focus ring en `zinc-900`.
+  - `dialog.tsx`: Modales con radio `rounded-2xl`, overlay `bg-zinc-950/40 backdrop-blur-xs` y sombras refinadas.
+  - `table.tsx`: Headers sobrios en `bg-zinc-50/75 text-zinc-500 uppercase tracking-wider text-xs`, hover suave y bordes interiores `border-zinc-100`.
+- [x] **Layout Shell (`Sidebar.tsx`, `Topbar.tsx`, `AuthenticatedLayout.tsx`):**
+  - `Sidebar.tsx`: Fondo `bg-zinc-950` con borde `border-zinc-800/60`, logotipo tipográfico sobrio "Nexia", ítems con píldora discreta `bg-zinc-800/80 text-white text-xs` e íconos a escala uniforme `h-4 w-4`.
+  - `Topbar.tsx`: Altura `h-14`, fondo `bg-white/80 backdrop-blur-md border-b border-zinc-200/70`, breadcrumb jerárquico legible y perfil de usuario compacto.
+  - `AuthenticatedLayout.tsx`: Fondo de trabajo `bg-zinc-50/50` y contenedor estructurado.
+
+### Bloque UI-2: Rediseño de Pantallas Clave
+- [x] **Login (`login/page.tsx`):**
+  - Eliminado bloque flotante morado (`bg-indigo-600`).
+  - Card central minimalista `rounded-2xl border-zinc-200/80 p-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]`.
+  - Callout de error en `bg-rose-50 text-rose-700 border-rose-200/60 text-xs` y botón primario en `bg-zinc-900`.
+- [x] **Dashboard y Directorio de Propiedades (`propiedades/page.tsx` & `propiedades/[id]/page.tsx`):**
+  - Stat Cards de KPIs transformadas en tarjetas métricas limpias con valores `text-3xl tabular-nums` y sin íconos gigantes saturados.
+  - Barra de búsqueda y filtros unificados en una sola fila compacta con botón primario "Nueva Propiedad".
+  - Tabla de propiedades envuelta en contenedor `border-zinc-200/80` con identificadores en `tabular-nums` y badges semánticos.
+  - Detalle de propiedad con breadcrumb de navegación, tabs de línea sobria y grids organizados con bordes de 1px.
+- [x] **Módulo de Visitas y Accesos (`visitas/page.tsx`):**
+  - Segmented control moderno en `bg-zinc-100/80 p-1` para selector de pestañas.
+  - Pases activos y deliveries en cards limpias con badges `success`/`neutral`, fechas y placas en `tabular-nums`.
+  - Botón "Mostrar QR" en variante `outline` y acción de cancelar con hover en tono rose suave.
+- [x] **Consola de Garita (`garita/page.tsx`):**
+  - Eliminado anti-patrón de franja lateral verde (`w-2 bg-emerald-500 stripe`).
+  - Tarjetas de resultado de escaneo (VERDE/AMARILLO/ROJO) con fondos tonales suaves y bordes de estado claros (`bg-emerald-50/90 border-2 border-emerald-500`).
+  - Visor de cámara enmarcado en contenedor oscuro `bg-zinc-950 border-zinc-800`.
+  - Botones táctiles de alta velocidad en `bg-zinc-900` y `bg-zinc-800`.
+- [x] **Bitácora de Seguridad (`bitacora/page.tsx`):**
+  - Eliminado anti-patrón de animación anticuada (`animate-bounce`).
+  - Tabla de auditoría con timestamps y placas en `tabular-nums`, badges semánticos y botón "Exportar CSV" en variante `outline`.
 
 ---
 
