@@ -21,6 +21,7 @@ router.post('/entries', rbacMiddleware(['GUARDIA', 'ADMIN_CONDOMINIO', 'SUPERADM
 router.post('/entries/manual', rbacMiddleware(['GUARDIA', 'ADMIN_CONDOMINIO', 'SUPERADMIN']), gateController.manualEntry);
 router.post('/exits', rbacMiddleware(['GUARDIA', 'ADMIN_CONDOMINIO', 'SUPERADMIN']), gateController.registerExit);
 router.post('/deliveries/:id/entry', rbacMiddleware(['GUARDIA', 'ADMIN_CONDOMINIO', 'SUPERADMIN']), gateController.registerDeliveryEntry);
+router.get('/properties/search', rbacMiddleware(['GUARDIA', 'ADMIN_CONDOMINIO', 'SUPERADMIN']), gateController.searchProperties);
 router.get('/properties/:id/contact', rbacMiddleware(['GUARDIA', 'ADMIN_CONDOMINIO', 'SUPERADMIN']), gateController.getPropertyContact);
 router.post('/call-verifications', rbacMiddleware(['GUARDIA', 'ADMIN_CONDOMINIO', 'SUPERADMIN']), gateController.registerCallVerification);
 

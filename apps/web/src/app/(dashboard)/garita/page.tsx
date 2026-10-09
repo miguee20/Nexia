@@ -9,7 +9,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { QrCode, Phone, Package, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react';
+import { QrCode, Phone, Package, CheckCircle2, XCircle, AlertTriangle, Home } from 'lucide-react';
+import { toast } from 'sonner';
+
+interface PropertySuggestion {
+  id: string;
+  identificador: string;
+}
 
 export default function GaritaConsolePage() {
   const [activeTab, setActiveTab] = useState<'ESCANER' | 'DELIVERIES'>('ESCANER');
@@ -26,6 +32,9 @@ export default function GaritaConsolePage() {
   // Phone fallback state
   const [isCallModalOpen, setIsCallModalOpen] = useState(false);
   const [propertyQuery, setPropertyQuery] = useState('');
+  const [propertySuggestions, setPropertySuggestions] = useState<PropertySuggestion[]>([]);
+  const [selectedProperty, setSelectedProperty] = useState<PropertySuggestion | null>(null);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [propertyContact, setPropertyContact] = useState<any>(null);
   const [visitorName, setVisitorName] = useState('');
 
@@ -43,6 +52,25 @@ export default function GaritaConsolePage() {
     const interval = setInterval(fetchDeliveries, 30000);
     return () => clearInterval(interval);
   }, []);
+
+  // Debounced property suggestions while the call fallback modal is open
+  useEffect(() => {
+    if (!isCallModalOpen || selectedProperty) return;
+
+    const timeout = setTimeout(async () => {
+      try {
+        const { data } = await api.get<PropertySuggestion[]>('/gate/properties/search', {
+          params: { q: propertyQuery.trim() }
+        });
+        setPropertySuggestions(data);
+      } catch (error) {
+        console.error(error);
+        toast.error('No se pudo cargar la lista de propiedades.');
+      }
+    }, 250);
+
+    return () => clearTimeout(timeout);
+  }, [propertyQuery, isCallModalOpen, selectedProperty]);
 
   const validateQR = async (token: string) => {
     try {
@@ -104,7 +132,7 @@ export default function GaritaConsolePage() {
       setScanResult(null);
       setSuccessMessage('El ingreso del visitante se ha registrado exitosamente.');
     } catch (error) {
-      alert('Error al registrar entrada');
+      toast.error('No se pudo registrar la entrada. Intenta de nuevo.');
     }
   };
 
@@ -114,35 +142,84 @@ export default function GaritaConsolePage() {
       fetchDeliveries();
       setSuccessMessage('El ingreso del repartidor se ha registrado exitosamente.');
     } catch (error) {
-      alert('Error al registrar delivery');
+      toast.error('No se pudo registrar el ingreso del delivery. Intenta de nuevo.');
     }
   };
 
-  const handleSearchProperty = async () => {
+  const resetCallModal = () => {
+    setPropertyQuery('');
+    setSelectedProperty(null);
+    setPropertySuggestions([]);
+    setShowSuggestions(true);
+    setPropertyContact(null);
+    setVisitorName('');
+  };
+
+  const loadPropertyContact = async (property: PropertySuggestion) => {
     try {
-      const { data } = await api.get(`/gate/properties/${propertyQuery}/contact`);
+      const { data } = await api.get(`/gate/properties/${property.id}/contact`);
       setPropertyContact(data);
     } catch (error) {
-      alert('Propiedad no encontrada');
+      toast.error('No se pudo obtener la información de contacto de la propiedad.');
       setPropertyContact(null);
     }
   };
 
+  const selectProperty = (property: PropertySuggestion) => {
+    setSelectedProperty(property);
+    setPropertyQuery(property.identificador);
+    setShowSuggestions(false);
+    loadPropertyContact(property);
+  };
+
+  const handleSearchProperty = () => {
+    const query = propertyQuery.trim().toLowerCase();
+    if (!query) {
+      toast.error('Escribe el identificador de la propiedad (ej. CASA E-21).');
+      return;
+    }
+
+    const exactMatch = propertySuggestions.find(p => p.identificador.toLowerCase() === query);
+    const match = selectedProperty ?? exactMatch ?? (propertySuggestions.length === 1 ? propertySuggestions[0] : undefined);
+
+    if (match) {
+      selectProperty(match);
+      return;
+    }
+
+    if (propertySuggestions.length > 1) {
+      toast.info('Hay varias coincidencias. Selecciona una propiedad de la lista.');
+      setShowSuggestions(true);
+      return;
+    }
+
+    toast.error(`No se encontró ninguna propiedad con "${propertyQuery.trim()}".`);
+  };
+
   const registerCallAuth = async (autorizado: boolean) => {
+    if (!selectedProperty || !propertyContact) return;
+
+    if (!visitorName.trim()) {
+      toast.error('Ingresa el nombre del visitante para la bitácora.');
+      return;
+    }
+
     try {
       await api.post('/gate/call-verifications', {
-        propiedad_id: propertyQuery,
-        nombre_visitante: visitorName,
+        propiedad_id: selectedProperty.id,
+        nombre_visitante: visitorName.trim(),
         telefono_contactado: propertyContact.propietario?.telefono || propertyContact.inquilino?.telefono || 'Desconocido',
         autorizo_ingreso: autorizado
       });
       setIsCallModalOpen(false);
-      setVisitorName('');
-      setPropertyContact(null);
-      setPropertyQuery('');
-      if (autorizado) setSuccessMessage('Ingreso por verificación telefónica registrado exitosamente.');
+      resetCallModal();
+      if (autorizado) {
+        setSuccessMessage('Ingreso por verificación telefónica registrado exitosamente.');
+      } else {
+        toast.info('Se registró que el residente denegó el ingreso.');
+      }
     } catch (error) {
-      alert('Error al registrar');
+      toast.error('No se pudo registrar la verificación. Intenta de nuevo.');
     }
   };
 
@@ -293,7 +370,13 @@ export default function GaritaConsolePage() {
         </div>
       )}
 
-      <Dialog open={isCallModalOpen} onOpenChange={setIsCallModalOpen}>
+      <Dialog
+        open={isCallModalOpen}
+        onOpenChange={(open) => {
+          setIsCallModalOpen(open);
+          if (!open) resetCallModal();
+        }}
+      >
         <DialogContent className="sm:max-w-[480px]">
           <DialogHeader>
             <DialogTitle className="text-2xl">Verificación por Llamada</DialogTitle>
@@ -302,16 +385,59 @@ export default function GaritaConsolePage() {
           <div className="space-y-6 py-4">
             {!propertyContact ? (
               <div className="space-y-4">
-                <Label>ID de la Propiedad (ej. A-101)</Label>
+                <Label>Propiedad (ej. CASA E-21)</Label>
                 <div className="flex gap-2">
-                  <Input className="min-h-[48px]" value={propertyQuery} onChange={(e) => setPropertyQuery(e.target.value)} />
+                  <Input
+                    className="min-h-[48px]"
+                    placeholder="Escribe para buscar..."
+                    value={propertyQuery}
+                    onFocus={() => setShowSuggestions(true)}
+                    onChange={(e) => {
+                      setPropertyQuery(e.target.value);
+                      setSelectedProperty(null);
+                      setShowSuggestions(true);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleSearchProperty();
+                    }}
+                  />
                   <Button className="min-h-[48px]" onClick={handleSearchProperty}>Buscar</Button>
                 </div>
+                {showSuggestions && propertySuggestions.length > 0 && (
+                  <ul className="max-h-56 overflow-y-auto rounded-xl border border-zinc-200 bg-white shadow-xs divide-y divide-zinc-100">
+                    {propertySuggestions.map((property) => (
+                      <li key={property.id}>
+                        <button
+                          type="button"
+                          className="flex w-full items-center gap-3 px-4 min-h-[48px] text-left text-sm font-medium text-zinc-800 hover:bg-zinc-50"
+                          onClick={() => selectProperty(property)}
+                        >
+                          <Home className="w-4 h-4 text-zinc-400" />
+                          {property.identificador}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             ) : (
               <div className="space-y-6">
                 <div className="bg-zinc-50 p-4 rounded-xl border border-zinc-200">
-                  <h4 className="font-semibold text-zinc-900 mb-2">Contactos de {propertyContact.identificador}</h4>
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-semibold text-zinc-900">Contactos de {propertyContact.identificador}</h4>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setPropertyContact(null);
+                        setSelectedProperty(null);
+                        setShowSuggestions(true);
+                      }}
+                    >
+                      Cambiar
+                    </Button>
+                  </div>
                   {propertyContact.inquilino && (
                     <div className="flex justify-between items-center py-2 border-b border-zinc-200">
                       <div>

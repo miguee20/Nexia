@@ -1,4 +1,5 @@
 import { Response, NextFunction } from 'express';
+import { z } from 'zod';
 import { GenerateVisitPassUseCase } from '../../application/use-cases/gate/generate-visit-pass.use-case';
 import { ValidateQRUseCase } from '../../application/use-cases/gate/validate-qr.use-case';
 import { CreateDeliveryAlertUseCase } from '../../application/use-cases/gate/create-delivery-alert.use-case';
@@ -10,6 +11,7 @@ import { RegisterExitUseCase } from '../../application/use-cases/gate/register-e
 import { ManualEntryUseCase } from '../../application/use-cases/gate/manual-entry.use-case';
 import { RegisterDeliveryUseCase } from '../../application/use-cases/gate/register-delivery.use-case';
 import { GetPropertyContactUseCase } from '../../application/use-cases/gate/get-property-contact.use-case';
+import { SearchPropertiesUseCase } from '../../application/use-cases/gate/search-properties.use-case';
 import { RegisterCallVerificationUseCase } from '../../application/use-cases/gate/register-call-verification.use-case';
 import { SearchAuthorizedVehicleUseCase } from '../../application/use-cases/gate/search-authorized-vehicle.use-case';
 import { GetGateLogsUseCase } from '../../application/use-cases/gate/get-gate-logs.use-case';
@@ -42,6 +44,7 @@ export class GateController {
   private manualEntryUseCase: ManualEntryUseCase;
   private registerDeliveryUseCase: RegisterDeliveryUseCase;
   private getPropertyContactUseCase: GetPropertyContactUseCase;
+  private searchPropertiesUseCase: SearchPropertiesUseCase;
   private registerCallVerificationUseCase: RegisterCallVerificationUseCase;
   private searchAuthorizedVehicleUseCase: SearchAuthorizedVehicleUseCase;
   private getGateLogsUseCase: GetGateLogsUseCase;
@@ -69,6 +72,7 @@ export class GateController {
     this.manualEntryUseCase = new ManualEntryUseCase(gateLogRepo);
     this.registerDeliveryUseCase = new RegisterDeliveryUseCase(gateLogRepo, deliveryAlertRepo);
     this.getPropertyContactUseCase = new GetPropertyContactUseCase(propertyContactRepo);
+    this.searchPropertiesUseCase = new SearchPropertiesUseCase(propertyContactRepo);
     this.registerCallVerificationUseCase = new RegisterCallVerificationUseCase(gateLogRepo);
     this.searchAuthorizedVehicleUseCase = new SearchAuthorizedVehicleUseCase(vehicleVerificationRepo);
     this.getGateLogsUseCase = new GetGateLogsUseCase(gateLogRepo);
@@ -198,6 +202,17 @@ export class GateController {
       const dto = RegisterDeliveryEntrySchema.parse({ ...req.body, alerta_id: id });
       const log = await this.registerDeliveryUseCase.execute(condominioId, userId, dto);
       res.status(201).json(log);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  searchProperties = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { condominioId } = req.user!;
+      const { q } = z.object({ q: z.string().max(50).optional().default('') }).parse(req.query);
+      const properties = await this.searchPropertiesUseCase.execute(condominioId, q);
+      res.json(properties);
     } catch (error) {
       next(error);
     }
