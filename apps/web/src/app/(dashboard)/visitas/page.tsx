@@ -289,7 +289,7 @@ export default function VisitasPage() {
           <h1 className="text-xl font-semibold tracking-tight text-zinc-900">Control de Accesos</h1>
           <p className="text-sm text-zinc-500 mt-1">Gestiona tus visitas y entregas esperadas.</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center sm:gap-3">
           <Button variant="outline" size="sm" className="h-9 bg-white text-zinc-900" onClick={() => setIsDeliveryModalOpen(true)}>
             <Package className="mr-2 h-4 w-4" /> Espero Delivery
           </Button>
@@ -299,11 +299,11 @@ export default function VisitasPage() {
         </div>
       </div>
 
-      <div role="tablist" className="inline-flex rounded-lg bg-zinc-100/80 p-1">
+      <div role="tablist" className="flex w-full rounded-lg bg-zinc-100/80 p-1 sm:inline-flex sm:w-auto">
         <button
           role="tab"
           aria-selected={activeTab === 'VISITAS'}
-          className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${activeTab === 'VISITAS' ? 'bg-white text-zinc-900 shadow-xs' : 'text-zinc-500 hover:text-zinc-700'}`}
+          className={`flex-1 whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium sm:flex-none transition-colors ${activeTab === 'VISITAS' ? 'bg-white text-zinc-900 shadow-xs' : 'text-zinc-500 hover:text-zinc-700'}`}
           onClick={() => setActiveTab('VISITAS')}
         >
           Mis Pases de Visita
@@ -311,7 +311,7 @@ export default function VisitasPage() {
         <button
           role="tab"
           aria-selected={activeTab === 'DELIVERIES'}
-          className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${activeTab === 'DELIVERIES' ? 'bg-white text-zinc-900 shadow-xs' : 'text-zinc-500 hover:text-zinc-700'}`}
+          className={`flex-1 whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium sm:flex-none transition-colors ${activeTab === 'DELIVERIES' ? 'bg-white text-zinc-900 shadow-xs' : 'text-zinc-500 hover:text-zinc-700'}`}
           onClick={() => setActiveTab('DELIVERIES')}
         >
           Deliveries Esperados
@@ -321,9 +321,9 @@ export default function VisitasPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {passes.map(pass => (
             <Card key={pass.id} className="overflow-hidden rounded-xl border-zinc-200/80 bg-white">
-              <CardHeader className="pb-3 flex flex-row items-start justify-between">
-                <div>
-                  <CardTitle className="text-sm font-semibold text-zinc-900">{pass.nombre_visitante}</CardTitle>
+              <CardHeader className="pb-3 flex flex-row items-start justify-between gap-3 space-y-0">
+                <div className="min-w-0">
+                  <CardTitle className="truncate text-sm font-semibold text-zinc-900">{pass.nombre_visitante}</CardTitle>
                   <CardDescription className="mt-1 text-xs">{pass.motivo}</CardDescription>
                 </div>
                 {getStatusBadge(pass.estado)}
@@ -375,8 +375,8 @@ export default function VisitasPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {deliveries.map(delivery => (
             <Card key={delivery.id} className="rounded-xl border-zinc-200/80 bg-white">
-              <CardHeader className="pb-3 flex flex-row items-start justify-between">
-                <div>
+              <CardHeader className="pb-3 flex flex-row items-start justify-between gap-3 space-y-0">
+                <div className="min-w-0">
                   <CardTitle className="flex items-center gap-2 text-sm font-semibold text-zinc-900"><Package className="h-4 w-4 text-zinc-400" /> {delivery.descripcion}</CardTitle>
                   <CardDescription className="mt-1 text-xs">{delivery.nombre_repartidor || 'Repartidor no especificado'}</CardDescription>
                 </div>
@@ -439,7 +439,7 @@ export default function VisitasPage() {
                   <FormMessage />
                 </FormItem>
               )} />
-              <DialogFooter className="pt-4">
+              <DialogFooter className="gap-2 pt-4">
                 <Button type="button" variant="outline" onClick={() => setIsVisitModalOpen(false)}>Cancelar</Button>
                 <Button type="submit">Generar QR</Button>
               </DialogFooter>
@@ -471,7 +471,7 @@ export default function VisitasPage() {
                   <FormMessage />
                 </FormItem>
               )} />
-              <DialogFooter className="pt-4">
+              <DialogFooter className="gap-2 pt-4">
                 <Button type="button" variant="outline" onClick={() => setIsDeliveryModalOpen(false)}>Cancelar</Button>
                 <Button type="submit">Avisar a Garita</Button>
               </DialogFooter>
@@ -501,7 +501,7 @@ export default function VisitasPage() {
                 <div className="py-3 bg-white p-3 rounded-xl shadow-xs border border-zinc-100 my-3 flex items-center justify-center">
                   <QRCodeSVG
                     value={generatedQR.token}
-                    size={220}
+                    size={200}
                     level="M"
                     includeMargin
                     className="max-w-full h-auto"
@@ -560,7 +560,7 @@ export default function VisitasPage() {
           <p className="text-sm text-zinc-600 py-2">
             Esta acción revocará el pase. Si <strong>{passToCancel?.nombre_visitante}</strong> intenta entrar a la garita con este código QR, su acceso será denegado.
           </p>
-          <div className="flex justify-end gap-3 pt-3">
+          <div className="flex flex-col-reverse gap-2 pt-3 sm:flex-row sm:justify-end sm:gap-3">
             <Button variant="outline" onClick={() => setPassToCancel(null)}>Volver</Button>
             <Button variant="outline" className="border-rose-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700" onClick={confirmCancelPass}>Confirmar Cancelación</Button>
           </div>

@@ -143,9 +143,9 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
         <span className="font-medium text-zinc-900 tabular-nums">{property.identificador}</span>
       </nav>
 
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">{property.identificador}</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 break-words">{property.identificador}</h1>
           <div className="mt-2 flex items-center gap-2">
             <Badge variant="outline">{property.tipo}</Badge>
             {(() => {
@@ -166,13 +166,13 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
       </div>
 
       <Tabs defaultValue="general" className="w-full">
-        <TabsList className="h-auto w-full justify-start gap-6 rounded-none border-b border-zinc-200/80 bg-transparent p-0">
-          <TabsTrigger value="general" className="rounded-none border-b-2 border-transparent bg-transparent px-0 pb-2.5 pt-1 text-sm font-medium text-zinc-500 shadow-none data-[state=active]:border-zinc-900 data-[state=active]:bg-transparent data-[state=active]:text-zinc-900 data-[state=active]:shadow-none">Datos Generales y Residentes</TabsTrigger>
-          <TabsTrigger value="vehiculos" className="rounded-none border-b-2 border-transparent bg-transparent px-0 pb-2.5 pt-1 text-sm font-medium text-zinc-500 shadow-none data-[state=active]:border-zinc-900 data-[state=active]:bg-transparent data-[state=active]:text-zinc-900 data-[state=active]:shadow-none">Vehículos y Marbetes</TabsTrigger>
+        <TabsList className="h-auto w-full justify-start gap-6 overflow-x-auto rounded-none border-b border-zinc-200/80 bg-transparent p-0">
+          <TabsTrigger value="general" className="shrink-0 whitespace-nowrap rounded-none border-b-2 border-transparent bg-transparent px-0 pb-2.5 pt-1 text-sm font-medium text-zinc-500 shadow-none data-[state=active]:border-zinc-900 data-[state=active]:bg-transparent data-[state=active]:text-zinc-900 data-[state=active]:shadow-none">Datos Generales y Residentes</TabsTrigger>
+          <TabsTrigger value="vehiculos" className="shrink-0 whitespace-nowrap rounded-none border-b-2 border-transparent bg-transparent px-0 pb-2.5 pt-1 text-sm font-medium text-zinc-500 shadow-none data-[state=active]:border-zinc-900 data-[state=active]:bg-transparent data-[state=active]:text-zinc-900 data-[state=active]:shadow-none">Vehículos y Marbetes</TabsTrigger>
         </TabsList>
         
         <TabsContent value="general" className="mt-6 space-y-4">
-          <div className="flex justify-between items-center mb-2">
+          <div className="mb-2 flex flex-wrap items-center justify-between gap-3">
             <h2 className="text-sm font-semibold tracking-tight text-zinc-900">Residentes Asignados</h2>
             <Dialog open={isAssignOpen} onOpenChange={setIsAssignOpen}>
               <DialogTrigger asChild>
@@ -249,7 +249,7 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
         </TabsContent>
 
         <TabsContent value="vehiculos" className="mt-6 space-y-4">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="text-sm font-semibold tracking-tight text-zinc-900">Vehículos Registrados</h2>
             <Dialog open={isVehicleOpen} onOpenChange={setIsVehicleOpen}>
               <DialogTrigger asChild>
@@ -264,7 +264,7 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
                     <FormField control={vehicleForm.control} name="placa" render={({ field }) => (
                       <FormItem><FormLabel className="text-xs font-medium text-zinc-700">Placa</FormLabel><FormControl><Input className="h-9 text-sm" {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <FormField control={vehicleForm.control} name="marca" render={({ field }) => (
                         <FormItem><FormLabel className="text-xs font-medium text-zinc-700">Marca</FormLabel><FormControl><Input className="h-9 text-sm" {...field} /></FormControl><FormMessage /></FormItem>
                       )} />
@@ -272,7 +272,7 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
                         <FormItem><FormLabel className="text-xs font-medium text-zinc-700">Color</FormLabel><FormControl><Input className="h-9 text-sm" {...field} /></FormControl><FormMessage /></FormItem>
                       )} />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <FormField control={vehicleForm.control} name="modelo" render={({ field }) => (
                         <FormItem><FormLabel className="text-xs font-medium text-zinc-700">Modelo (Año)</FormLabel><FormControl><Input className="h-9 text-sm" {...field} /></FormControl><FormMessage /></FormItem>
                       )} />
@@ -304,8 +304,8 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
                 <TableRow>
                   <TableHead>Placa</TableHead>
                   <TableHead>Marca / Modelo</TableHead>
-                  <TableHead>Color</TableHead>
-                  <TableHead>Tipo</TableHead>
+                  <TableHead className="hidden md:table-cell">Color</TableHead>
+                  <TableHead className="hidden md:table-cell">Tipo</TableHead>
                   <TableHead>Marbete Asociado</TableHead>
                   <TableHead>Acciones</TableHead>
                 </TableRow>
@@ -320,8 +320,8 @@ export default function PropertyDetailsPage({ params }: { params: Promise<{ id: 
                       <TableRow key={v.id}>
                         <TableCell className="font-medium text-zinc-900 tabular-nums">{v.placa}</TableCell>
                         <TableCell>{v.marca} {v.modelo ? `(${v.modelo})` : ''}</TableCell>
-                        <TableCell>{v.color}</TableCell>
-                        <TableCell>{v.tipo}</TableCell>
+                        <TableCell className="hidden md:table-cell">{v.color}</TableCell>
+                        <TableCell className="hidden md:table-cell">{v.tipo}</TableCell>
                         <TableCell>
                           {activeMarbete ? (
                             <div className="flex flex-col gap-1 items-start">

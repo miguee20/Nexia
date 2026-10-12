@@ -228,9 +228,9 @@ export default function GaritaConsolePage() {
 
     if (scanResult.estado === 'VALIDO') {
       return (
-        <div className="bg-emerald-50/90 border-2 border-emerald-500 rounded-xl p-6 text-center space-y-4">
+        <div className="bg-emerald-50/90 border-2 border-emerald-500 rounded-xl p-4 sm:p-6 text-center space-y-4">
           <CheckCircle2 className="w-12 h-12 text-emerald-600 mx-auto" />
-          <h3 className="text-2xl font-semibold tracking-tight text-emerald-800">ACCESO AUTORIZADO</h3>
+          <h3 className="text-xl sm:text-2xl font-semibold tracking-tight text-emerald-800">ACCESO AUTORIZADO</h3>
           <div className="text-left bg-white p-4 rounded-lg border border-zinc-200/70 text-sm tabular-nums space-y-1">
             <p><strong>Visitante:</strong> {scanResult.pass?.nombre_visitante}</p>
             <p><strong>Propiedad:</strong> {scanResult.pass?.propiedad?.identificador}</p>
@@ -245,15 +245,15 @@ export default function GaritaConsolePage() {
 
     if (scanResult.estado === 'ANFITRION_MOROSO') {
       return (
-        <div className="bg-amber-50/90 border-2 border-amber-500 rounded-xl p-6 text-center space-y-4">
+        <div className="bg-amber-50/90 border-2 border-amber-500 rounded-xl p-4 sm:p-6 text-center space-y-4">
           <AlertTriangle className="w-12 h-12 text-amber-600 mx-auto" />
-          <h3 className="text-2xl font-semibold tracking-tight text-amber-800">ADVERTENCIA: RESIDENTE EN MORA</h3>
+          <h3 className="text-xl sm:text-2xl font-semibold tracking-tight text-amber-800">ADVERTENCIA: RESIDENTE EN MORA</h3>
           <p className="text-amber-800">{scanResult.mensaje}</p>
           <div className="text-left bg-white p-4 rounded-lg border border-zinc-200/70 text-sm tabular-nums space-y-1">
             <p><strong>Visitante:</strong> {scanResult.pass?.nombre_visitante}</p>
             <p><strong>Propiedad:</strong> {scanResult.pass?.propiedad?.identificador}</p>
           </div>
-          <div className="flex gap-4">
+          <div className="flex flex-col-reverse gap-3 sm:flex-row sm:gap-4">
             <Button variant="outline" className="flex-1 min-h-[56px] bg-white" onClick={() => setScanResult(null)}>Rechazar</Button>
             <Button className="flex-1 min-h-[56px] bg-zinc-900 text-white hover:bg-zinc-800" onClick={() => registerEntry(scanResult.pass.id)}>
               Ingresar con Advertencia
@@ -264,9 +264,9 @@ export default function GaritaConsolePage() {
     }
 
     return (
-      <div className="bg-red-50/90 border-2 border-red-500 rounded-xl p-6 text-center space-y-4">
+      <div className="bg-red-50/90 border-2 border-red-500 rounded-xl p-4 sm:p-6 text-center space-y-4">
         <XCircle className="w-12 h-12 text-red-600 mx-auto" />
-        <h3 className="text-2xl font-semibold tracking-tight text-red-800">ACCESO DENEGADO</h3>
+        <h3 className="text-xl sm:text-2xl font-semibold tracking-tight text-red-800">ACCESO DENEGADO</h3>
         <p className="text-red-800 text-lg">{scanResult.mensaje}</p>
         <Button variant="outline" className="w-full min-h-[48px]" onClick={() => setScanResult(null)}>Volver a escanear</Button>
       </div>
@@ -274,24 +274,24 @@ export default function GaritaConsolePage() {
   };
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto pb-20">
+    <div className="space-y-6 max-w-5xl mx-auto pb-10 sm:pb-20">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-xl font-semibold tracking-tight text-zinc-900">Consola de Garita</h1>
           <p className="text-sm text-zinc-500 mt-1">Control de acceso vehicular y peatonal.</p>
         </div>
-        <div className="flex items-center gap-3">
-          <Button variant="outline" className="bg-white border-zinc-200 shadow-2xs min-h-[48px]" onClick={() => setIsCallModalOpen(true)}>
+        <div className="flex w-full items-center gap-3 sm:w-auto">
+          <Button variant="outline" className="w-full sm:w-auto bg-white border-zinc-200 shadow-2xs min-h-[48px]" onClick={() => setIsCallModalOpen(true)}>
             <Phone className="mr-2 h-4 w-4" /> Verificar con Residente
           </Button>
         </div>
       </div>
 
-      <div role="tablist" className="inline-flex rounded-lg bg-zinc-100/80 p-1">
+      <div role="tablist" className="flex w-full rounded-lg bg-zinc-100/80 p-1 sm:inline-flex sm:w-auto">
         <button
           role="tab"
           aria-selected={activeTab === 'ESCANER'}
-          className={`flex min-h-[44px] items-center rounded-md px-5 text-sm font-medium transition-colors ${activeTab === 'ESCANER' ? 'bg-white text-zinc-900 shadow-xs' : 'text-zinc-500 hover:text-zinc-700'}`}
+          className={`flex flex-1 min-h-[44px] items-center justify-center whitespace-nowrap rounded-md px-3 sm:flex-none sm:px-5 text-sm font-medium transition-colors ${activeTab === 'ESCANER' ? 'bg-white text-zinc-900 shadow-xs' : 'text-zinc-500 hover:text-zinc-700'}`}
           onClick={() => setActiveTab('ESCANER')}
         >
           <QrCode className="mr-2 h-4 w-4" /> Escáner QR
@@ -299,7 +299,7 @@ export default function GaritaConsolePage() {
         <button
           role="tab"
           aria-selected={activeTab === 'DELIVERIES'}
-          className={`flex min-h-[44px] items-center rounded-md px-5 text-sm font-medium transition-colors ${activeTab === 'DELIVERIES' ? 'bg-white text-zinc-900 shadow-xs' : 'text-zinc-500 hover:text-zinc-700'}`}
+          className={`flex flex-1 min-h-[44px] items-center justify-center whitespace-nowrap rounded-md px-3 sm:flex-none sm:px-5 text-sm font-medium transition-colors ${activeTab === 'DELIVERIES' ? 'bg-white text-zinc-900 shadow-xs' : 'text-zinc-500 hover:text-zinc-700'}`}
           onClick={() => setActiveTab('DELIVERIES')}
         >
           <Package className="mr-2 h-4 w-4" /> Deliveries <span className="ml-1.5 tabular-nums">({deliveries.length})</span>
@@ -307,12 +307,12 @@ export default function GaritaConsolePage() {
       </div>
       {activeTab === 'ESCANER' && (
         <Card className="bg-white rounded-2xl overflow-hidden border-zinc-200/80">
-          <CardContent className="p-6 sm:p-10">
+          <CardContent className="p-4 sm:p-10">
             {!scanResult && (
               <div className="max-w-md mx-auto space-y-8">
                 <form onSubmit={handleQRSubmit} className="space-y-4">
                   <Label className="text-sm font-medium text-zinc-700">Código del Pase (Lector USB / Manual)</Label>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col gap-2 sm:flex-row">
                     <Input 
                       autoFocus
                       placeholder="Ingrese o escanee el código..." 
@@ -388,7 +388,7 @@ export default function GaritaConsolePage() {
             {!propertyContact ? (
               <div className="space-y-4">
                 <Label>Propiedad (ej. CASA E-21)</Label>
-                <div className="flex gap-2">
+                <div className="flex flex-col gap-2 sm:flex-row">
                   <Input
                     className="min-h-[48px]"
                     placeholder="Escribe para buscar..."
@@ -464,7 +464,7 @@ export default function GaritaConsolePage() {
                   <Label>Nombre del Visitante (para la bitácora)</Label>
                   <Input className="min-h-[48px]" value={visitorName} onChange={(e) => setVisitorName(e.target.value)} />
                   
-                  <div className="flex gap-4 pt-4">
+                  <div className="flex flex-col-reverse gap-3 pt-4 sm:flex-row sm:gap-4">
                     <Button variant="outline" className="flex-1 min-h-[56px] text-base hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600" onClick={() => registerCallAuth(false)}>Denegar Ingreso</Button>
                     <Button className="flex-1 min-h-[56px] text-base bg-zinc-900 text-white hover:bg-zinc-800" onClick={() => registerCallAuth(true)}>Autorizar Ingreso</Button>
                   </div>

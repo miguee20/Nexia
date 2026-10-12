@@ -20,7 +20,8 @@ import {
   LogOut,
   LucideIcon,
   ShieldCheck,
-  History
+  History,
+  X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -61,7 +62,13 @@ const MENU_ITEMS: RoleMenu = {
   ],
 };
 
-export function Sidebar() {
+type SidebarProps = {
+  /** Mobile drawer visibility (ignored on md+ where the sidebar is always visible). */
+  mobileOpen?: boolean;
+  onClose?: () => void;
+};
+
+export function Sidebar({ mobileOpen = false, onClose }: SidebarProps = {}) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuth();
@@ -76,10 +83,33 @@ export function Sidebar() {
   };
 
   return (
-    <div className="flex flex-col w-60 h-screen shrink-0 bg-zinc-950 text-zinc-100 border-r border-zinc-800/60">
-      <div className="h-14 px-5 flex items-center shrink-0 font-semibold text-lg tracking-tight text-white">
-        
+    <>
+      {/* Mobile backdrop */}
+      <div
+        aria-hidden="true"
+        onClick={() => onClose?.()}
+        className={cn(
+          "fixed inset-0 z-40 bg-zinc-950/50 transition-opacity md:hidden",
+          mobileOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        )}
+      />
+    <aside
+      className={cn(
+        "fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-zinc-950 text-zinc-100 border-r border-zinc-800/60 transition-transform duration-200 ease-out",
+        "md:static md:z-auto md:h-dvh md:w-60 md:shrink-0 md:translate-x-0",
+        mobileOpen ? "translate-x-0" : "-translate-x-full"
+      )}
+    >
+      <div className="h-14 px-5 flex items-center justify-between shrink-0 font-semibold text-lg tracking-tight text-white">
         Nexia
+        <button
+          type="button"
+          onClick={() => onClose?.()}
+          aria-label="Cerrar menú"
+          className="-mr-2 flex h-9 w-9 items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-800/60 hover:text-white md:hidden"
+        >
+          <X className="h-4 w-4" />
+        </button>
       </div>
 
       <nav className="flex-1 px-3 py-2 space-y-0.5 overflow-y-auto">
@@ -89,8 +119,9 @@ export function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={() => onClose?.()}
               className={cn(
-                "flex items-center gap-2.5 py-2 px-3 rounded-lg transition-colors text-xs font-medium",
+                "flex items-center gap-2.5 py-2.5 md:py-2 px-3 rounded-lg transition-colors text-sm md:text-xs font-medium",
                 isActive 
                   ? "bg-zinc-800/80 text-white" 
                   : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50"
@@ -115,12 +146,13 @@ export function Sidebar() {
         </div>
         <button 
           onClick={handleLogout}
-          className="flex items-center justify-center w-full gap-2 px-3 py-2 text-xs font-medium text-zinc-400 hover:text-white hover:bg-zinc-800/60 rounded-lg transition-colors"
+          className="flex items-center justify-center w-full gap-2 px-3 py-2.5 md:py-2 text-xs font-medium text-zinc-400 hover:text-white hover:bg-zinc-800/60 rounded-lg transition-colors"
         >
           <LogOut className="h-4 w-4" />
           Cerrar Sesión
         </button>
       </div>
-    </div>
+    </aside>
+    </>
   );
 }

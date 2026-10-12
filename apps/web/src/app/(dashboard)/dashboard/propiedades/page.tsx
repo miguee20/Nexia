@@ -130,7 +130,7 @@ export default function PropiedadesPage() {
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
-        <div className="relative flex-1 max-w-sm">
+        <div className="relative w-full sm:max-w-sm sm:flex-1">
           <Search className="absolute left-2.5 top-[10px] h-4 w-4 text-zinc-400" />
           <Input 
             placeholder="Buscar por identificador..." 
@@ -139,8 +139,8 @@ export default function PropiedadesPage() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <Select onValueChange={(val) => setFilters(prev => ({...prev, tipo: val === 'ALL' ? '' : val}))}>
-          <SelectTrigger className="h-9 w-[170px] text-sm">
+        <div className="min-w-0 flex-1 sm:flex-none"><Select onValueChange={(val) => setFilters(prev => ({...prev, tipo: val === 'ALL' ? '' : val}))}>
+          <SelectTrigger className="h-9 w-full text-sm sm:w-[170px]">
             <SelectValue placeholder="Todos los tipos" />
           </SelectTrigger>
           <SelectContent>
@@ -150,9 +150,9 @@ export default function PropiedadesPage() {
             <SelectItem value="LOTE">Lote</SelectItem>
             <SelectItem value="LOCAL_COMERCIAL">Local Comercial</SelectItem>
           </SelectContent>
-        </Select>
-        <Select onValueChange={(val) => setFilters(prev => ({...prev, estado: val === 'ALL' ? '' : val}))}>
-          <SelectTrigger className="h-9 w-[170px] text-sm">
+        </Select></div>
+        <div className="min-w-0 flex-1 sm:flex-none"><Select onValueChange={(val) => setFilters(prev => ({...prev, estado: val === 'ALL' ? '' : val}))}>
+          <SelectTrigger className="h-9 w-full text-sm sm:w-[170px]">
             <SelectValue placeholder="Todos los estados" />
           </SelectTrigger>
           <SelectContent>
@@ -161,11 +161,11 @@ export default function PropiedadesPage() {
             <SelectItem value="DESOCUPADA">Desocupada</SelectItem>
             <SelectItem value="EN_CONSTRUCCION">En Construcción</SelectItem>
           </SelectContent>
-        </Select>
-        <div className="ml-auto">
+        </Select></div>
+        <div className="w-full sm:ml-auto sm:w-auto">
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
-            <Button className="h-9 bg-zinc-900 text-white hover:bg-zinc-800"><Plus className="mr-1.5 h-4 w-4" />Nueva Propiedad</Button>
+            <Button className="h-9 w-full sm:w-auto bg-zinc-900 text-white hover:bg-zinc-800"><Plus className="mr-1.5 h-4 w-4" />Nueva Propiedad</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
@@ -233,11 +233,11 @@ export default function PropiedadesPage() {
           <TableHeader>
             <TableRow>
               <TableHead>Identificador</TableHead>
-              <TableHead>Tipo</TableHead>
+              <TableHead className="hidden sm:table-cell">Tipo</TableHead>
               <TableHead>Estado</TableHead>
-              <TableHead>Propietario</TableHead>
-              <TableHead>Inquilino</TableHead>
-              <TableHead>Acciones</TableHead>
+              <TableHead className="hidden lg:table-cell">Propietario</TableHead>
+              <TableHead className="hidden lg:table-cell">Inquilino</TableHead>
+              <TableHead className="w-12 text-right"><span className="sr-only sm:not-sr-only">Acciones</span></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -249,13 +249,13 @@ export default function PropiedadesPage() {
               filteredProperties.map((prop) => (
                 <TableRow key={prop.id}>
                   <TableCell className="font-medium text-zinc-900 tabular-nums">{prop.identificador}</TableCell>
-                  <TableCell>{prop.tipo}</TableCell>
+                  <TableCell className="hidden sm:table-cell">{prop.tipo}</TableCell>
                   <TableCell>
                     {statusBadge(prop.estado)}
                   </TableCell>
-                  <TableCell>{prop.propietario_id ? 'Asignado' : 'Sin asignar'}</TableCell>
-                  <TableCell>{prop.inquilino_id ? 'Asignado' : 'Sin asignar'}</TableCell>
-                  <TableCell>
+                  <TableCell className="hidden lg:table-cell">{prop.propietario_id ? 'Asignado' : 'Sin asignar'}</TableCell>
+                  <TableCell className="hidden lg:table-cell">{prop.inquilino_id ? 'Asignado' : 'Sin asignar'}</TableCell>
+                  <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4" /></Button>

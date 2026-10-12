@@ -3,7 +3,7 @@
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '../../stores/useAuth';
-import { Building2, ChevronRight } from 'lucide-react';
+import { Building2, ChevronRight, Menu } from 'lucide-react';
 
 /**
  * Maps route segments to human-readable breadcrumb labels.
@@ -34,7 +34,7 @@ const ROLE_LABELS: Record<string, string> = {
   RESIDENTE: 'Residente',
 };
 
-export function Topbar() {
+export function Topbar({ onMenuClick }: { onMenuClick?: () => void } = {}) {
   const pathname = usePathname();
   const { user } = useAuth();
 
@@ -51,22 +51,32 @@ export function Topbar() {
   );
 
   return (
-    <header className="h-14 border-b border-zinc-200/70 bg-white/80 backdrop-blur-md px-6 flex items-center justify-between shrink-0 sticky top-0 z-10">
+    <header className="h-14 border-b border-zinc-200/70 bg-white px-4 md:px-6 gap-3 flex items-center justify-between shrink-0 sticky top-0 z-30">
       {/* Left — Breadcrumb */}
-      <nav className="flex items-center gap-1.5 text-sm text-zinc-500">
-        <span className="font-semibold text-zinc-900">Nexia</span>
+      <div className="flex min-w-0 items-center gap-2">
+      <button
+        type="button"
+        onClick={onMenuClick}
+        aria-label="Abrir menú"
+        className="-ml-2 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-zinc-600 hover:bg-zinc-100 md:hidden"
+      >
+        <Menu className="h-5 w-5" />
+      </button>
+      <nav className="flex min-w-0 items-center gap-1.5 text-sm text-zinc-500">
+        <span className="hidden font-semibold text-zinc-900 sm:inline">Nexia</span>
         {breadcrumbs.map((label, i) => (
           <React.Fragment key={i}>
-            <ChevronRight className="h-3.5 w-3.5 text-zinc-400" />
-            <span className={i === breadcrumbs.length - 1 ? 'text-zinc-900 font-medium' : ''}>
+            <ChevronRight className={`h-3.5 w-3.5 shrink-0 text-zinc-400 ${i === 0 ? 'hidden sm:block' : ''} ${i < breadcrumbs.length - 1 ? 'max-sm:hidden' : ''}`} />
+            <span className={i === breadcrumbs.length - 1 ? 'truncate text-zinc-900 font-medium' : 'hidden sm:inline'}>
               {label}
             </span>
           </React.Fragment>
         ))}
       </nav>
+      </div>
 
       {/* Right — Tenant badge + role + avatar */}
-      <div className="flex items-center gap-4">
+      <div className="flex shrink-0 items-center gap-3 md:gap-4">
         {/* Condominium badge */}
         <div className="hidden md:flex items-center gap-1.5 text-xs font-medium text-zinc-600 bg-zinc-50 border border-zinc-200/70 rounded-md px-2 py-1">
           <Building2 className="h-3.5 w-3.5 text-zinc-500" />

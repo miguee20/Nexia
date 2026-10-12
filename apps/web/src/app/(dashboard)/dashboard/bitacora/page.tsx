@@ -134,8 +134,8 @@ export default function BitacoraGaritaPage() {
       </div>
 
       <Card className="overflow-hidden rounded-xl border-zinc-200/80 bg-white shadow-xs">
-        <CardContent className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <CardContent className="p-4 sm:p-6">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 sm:gap-4 mb-6">
             <div className="space-y-1.5">
               <label className="text-xs font-medium text-zinc-700">Fecha Desde</label>
               <Input type="datetime-local" className="h-9 text-sm tabular-nums" value={fechaDesde} onChange={e => { setFechaDesde(e.target.value); setPage(1); }} />
@@ -175,7 +175,7 @@ export default function BitacoraGaritaPage() {
                   <TableHead>Evento</TableHead>
                   <TableHead>Propiedad</TableHead>
                   <TableHead>Visitante / Info</TableHead>
-                  <TableHead>Guardia Turno</TableHead>
+                  <TableHead className="hidden md:table-cell">Guardia Turno</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -201,7 +201,7 @@ export default function BitacoraGaritaPage() {
                         <div className="text-sm text-zinc-900">{log.nombre_visitante || log.pase?.nombre_visitante || log.alerta_delivery?.nombre_repartidor || 'Repartidor / Desconocido'}</div>
                         {(log.placa_vehiculo || log.pase?.placa_vehiculo) && <div className="text-xs text-zinc-500 flex items-center gap-1 mt-0.5 tabular-nums"><Search className="w-3 h-3" /> {log.placa_vehiculo || log.pase?.placa_vehiculo}</div>}
                       </TableCell>
-                      <TableCell className="text-sm text-zinc-600">{log.guardia.nombre_completo}</TableCell>
+                      <TableCell className="hidden md:table-cell text-sm text-zinc-600">{log.guardia.nombre_completo}</TableCell>
                     </TableRow>
                   ))
                 )}
@@ -209,11 +209,11 @@ export default function BitacoraGaritaPage() {
             </Table>
           </div>
           
-          <div className="mt-4 flex items-center justify-between px-2">
+          <div className="mt-4 flex flex-col gap-3 px-1 sm:flex-row sm:items-center sm:justify-between sm:px-2">
             <span className="text-sm text-zinc-500">
               Mostrando {logs.length} de {total} registros
             </span>
-            <div className="flex gap-2">
+            <div className="grid grid-cols-2 gap-2 sm:flex">
               <Button 
                 variant="outline" 
                 size="sm" 

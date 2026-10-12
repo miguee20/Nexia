@@ -72,7 +72,7 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-zinc-50 px-4">
       <div className="w-full max-w-md space-y-6">
-        <Card className="rounded-2xl border border-zinc-200/80 bg-white p-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
+        <Card className="rounded-2xl border border-zinc-200/80 bg-white p-6 sm:p-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
           <CardHeader className="space-y-1.5 p-0 pb-6">
             <CardTitle className="text-2xl font-semibold tracking-tight text-zinc-900">Nexia</CardTitle>
             <CardDescription className="text-xs font-normal text-zinc-500">
