@@ -10,7 +10,7 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 - [x] **Fase 1: Autenticación, Tenants y Modelo Base** (11 / 11 completadas)
 - [x] **Fase 2: Propiedades, Residentes, Vehículos y Marbetes** (10 / 10 completadas)
 - [x] **Fase 3: Módulo de Garita, Pases QR, Alertas de Delivery y Fallback** (19 / 19 completadas)
-- [x] **Refactor UI/UX: Rediseño Estético B2B (Tokens, Shell y Pantallas)** (2 / 2 bloques completados)
+- [x] **Refactor UI/UX: Rediseño Estético B2B y Adaptabilidad Full Responsive** (Tokens, Shell, Pantallas y Mobile)
 - [ ] **Fase 4: Módulo Financiero** (0 / 11 completadas)
 - [ ] **Fase 5: Módulo de Amenidades** (0 / 6 completadas)
 - [ ] **Fase 6: Notificaciones, Pulido y Documentación** (0 / 8 completadas)
@@ -147,6 +147,21 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 - [x] **Bitácora de Seguridad (`bitacora/page.tsx`):**
   - Eliminado anti-patrón de animación anticuada (`animate-bounce`).
   - Tabla de auditoría con timestamps y placas en `tabular-nums`, badges semánticos y botón "Exportar CSV" en variante `outline`.
+
+### Bloque UI-3: Adaptabilidad Full Responsive (Mobile-First) y Blindaje de Overlays
+- [x] **Drawer y Shell Móvil (`AuthenticatedLayout.tsx`, `Sidebar.tsx`, `Topbar.tsx`):**
+  - Implementación de navegación lateral en off-canvas drawer para móviles (`< md`) con botón hamburguesa accesible en `Topbar`.
+  - Transición a `h-dvh` / `min-h-dvh` en contenedores de viewport para prevenir desbordes causados por la barra de navegación del navegador móvil.
+  - Mitigación de bug de GPU en Chromium: eliminación de `backdrop-blur` en overlays de pantalla completa (`DialogOverlay` y backdrop de drawer) reemplazado por tinte sólido `bg-zinc-950/50`, erradicando la duplicación y reflejo en espejo de texturas del fondo.
+- [x] **Adaptabilidad en Vistas Clave:**
+  - `login/page.tsx`: Padding ergonómico para pantallas estrechas.
+  - `propiedades/page.tsx`: Toolbars apiladas verticalmente en móvil, selectores expandibles a ancho completo y ocultamiento progresivo de columnas secundarias en la tabla.
+  - `propiedades/[id]/page.tsx`: Pestañas con desplazamiento horizontal suave (`overflow-x-auto`), formularios en 1 columna para móviles y tablas compactas.
+  - `visitas/page.tsx`: Segmented control flexible a ancho completo, cuadrícula de acciones responsive y modales con scroll interior.
+  - `garita/page.tsx`: Consola optimizada para interacción táctil en tablets y móviles con áreas de toque >= 48px y apilado ergonómico.
+  - `bitacora/page.tsx`: Grid de filtros adaptativo (1, 2 y 4 columnas) y paginación apilada.
+- [x] **Normativa de Ingeniería (`PROJECT_RULES.md`):**
+  - Incorporada sección `1.4.2 Diseño Responsive Obligatorio (Mobile-First)` estableciendo como estándar de calidad la compatibilidad desde 360px de ancho y prohibiendo el uso de `backdrop-filter: blur(...)` en overlays de pantalla completa.
 
 ---
 

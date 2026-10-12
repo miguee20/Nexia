@@ -54,8 +54,22 @@ La API REST (`apps/api`) utiliza **Express 4.x** estructurado de manera estricta
 - **Fondos:** `bg-zinc-50` para el canvas de trabajo, `bg-white` para cards y tablas.
 - **Jerarquía:** Tablas y listas siempre contenidas en cards con `border border-zinc-200 shadow-sm rounded-xl`.
 - **Acciones:** Evitar botones con colores saturados masivos para acciones destructivas en tablas; usar variantes `outline`, `ghost` o dropdowns contextuales.
-- **Layout Shell:** Toda vista autenticada debe respetar el contenedor de `max-w-7xl mx-auto p-6 md:p-8`.
+- **Layout Shell:** Toda vista autenticada debe respetar el contenedor de `max-w-7xl mx-auto px-4 py-5 sm:p-6 md:p-8`.
 - **Alertas y Confirmaciones Estrictas:** Queda terminantemente prohibido el uso de las funciones nativas `alert()`, `confirm()` o `prompt()` del navegador. Cualquier mensaje de éxito, fallo, alerta o solicitud de confirmación debe implementarse utilizando Modales de Shadcn (`Dialog`), Toasts o componentes visuales integrados, garantizando una experiencia inmersiva e ideal para pantallas táctiles (tablets/móviles).
+
+### 1.4.2 Diseño Responsive Obligatorio (Mobile-First)
+Toda vista, componente o modal nuevo o modificado **debe funcionar perfectamente desde 360px de ancho hasta escritorio**. Un cambio de frontend no se considera terminado si no se ha verificado en móvil.
+- **Mobile-first:** Escribir las clases base para móvil y escalar con `sm:` / `md:` / `lg:`. Nunca asumir ancho de escritorio.
+- **Navegación:** En `< md` el `Sidebar` es un drawer off-canvas abierto desde el botón de menú del `Topbar`; en `md+` es fijo. No romper este contrato.
+- **Sin scroll horizontal de página:** Prohibido `w-[NNNpx]` fijos sin variante `sm:`; usar `w-full sm:w-[...]`. Textos largos con `truncate`, `min-w-0` o `break-words`.
+- **Barras de acciones y toolbars:** Apilar en móvil (`flex-col sm:flex-row` o `flex-wrap`); botones primarios `w-full sm:w-auto`. Pares de acciones de confirmación con `flex-col-reverse sm:flex-row`.
+- **Formularios:** Grids de campos `grid-cols-1 sm:grid-cols-2`. Inputs con `text-base md:text-sm` (evita el auto-zoom de iOS).
+- **Tablas:** Siempre dentro del wrapper con `overflow-x-auto` (ya incluido en `Table`). Ocultar columnas secundarias en móvil con `hidden sm:table-cell` / `hidden md:table-cell` / `hidden lg:table-cell` manteniendo visibles el identificador, el estado y las acciones.
+- **Tabs / segmented controls:** `flex w-full sm:inline-flex sm:w-auto` con ítems `flex-1 whitespace-nowrap`; tabs de línea con `overflow-x-auto`.
+- **Modales y Overlays:** El `DialogContent` base ya limita ancho y alto (`w-[calc(100%-2rem)]`, `max-h-[calc(100dvh-2rem)] overflow-y-auto`); no sobrescribirlo con anchos fijos. Los backdrops/overlays de modales y drawers deben usar tintes sólidos semi-transparentes (`bg-zinc-950/50`) y **nunca `backdrop-filter: blur(...)` / `backdrop-blur-*`**, ya que en motores Chromium en Windows provoca duplicación y efecto espejo (inversión horizontal de texturas rasterizadas por GPU).
+- **Áreas táctiles:** Mínimo 44×44px para acciones primarias en móvil (especialmente consola de garita).
+- **Alturas de viewport:** Usar `h-dvh` / `min-h-dvh` en lugar de `h-screen` en contenedores de pantalla completa.
+- **Verificación:** Revisar cada vista en 360px, 768px y 1280px (DevTools responsive mode) antes de entregar.
 
 ### 1.5 Persistencia y Multi-Tenancy
 - **ORM:** Prisma 6.x.
