@@ -12,6 +12,7 @@ import gateRouter from './presentation/routes/gate.routes';
 import visitRouter from './presentation/routes/visit.routes';
 import deliveryRouter from './presentation/routes/delivery.routes';
 import userRouter from './presentation/routes/user.routes';
+import feeRouter from './presentation/routes/fee.routes';
 import { errorHandler } from './presentation/middlewares/errorHandler';
 
 const app = express();
@@ -35,6 +36,7 @@ app.use('/api/gate', gateRouter);
 app.use('/api/visits', visitRouter);
 app.use('/api/deliveries', deliveryRouter);
 app.use('/api/users', userRouter);
+app.use('/api/finances/fees', feeRouter);
 
 // Global Error Handler
 app.use(errorHandler);

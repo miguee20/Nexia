@@ -11,7 +11,7 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 - [x] **Fase 2: Propiedades, Residentes, Vehículos y Marbetes** (10 / 10 completadas)
 - [x] **Fase 3: Módulo de Garita, Pases QR, Alertas de Delivery y Fallback** (19 / 19 completadas)
 - [x] **Refactor UI/UX: Rediseño Estético B2B y Adaptabilidad Full Responsive** (Tokens, Shell, Pantallas y Mobile)
-- [ ] **Fase 4: Módulo Financiero** (0 / 11 completadas)
+- [ ] **Fase 4: Módulo Financiero** (3 / 11 completadas)
 - [ ] **Fase 5: Módulo de Amenidades** (0 / 6 completadas)
 - [ ] **Fase 6: Notificaciones, Pulido y Documentación** (0 / 8 completadas)
 - [ ] **Fase 7: Despliegue, Demo y Portafolio** (0 / 8 completadas)
@@ -171,12 +171,12 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 - **Reglas Críticas:** Obligatorio usar `Prisma.$transaction` (All-or-Nothing) para movimientos, y tipos `Decimal` / `decimal.js` para cálculos (cero JS floats nativos).
 - **Duración estimada:** 5-7 días.
 
-- [ ] Implementar `EmitFeesUseCase` (individual y masiva).
-- [ ] Implementar lógica de recargo automático por mora.
+- [x] Implementar `EmitFeesUseCase` (individual y masiva).
+- [x] Implementar lógica de recargo automático por mora.
 - [ ] Implementar `SubmitPaymentUseCase` (subida de comprobante con imagen).
 - [ ] Implementar `ApprovePaymentUseCase` y `RejectPaymentUseCase`.
 - [ ] Implementar consulta de estado de cuenta del residente.
-- [ ] Implementar semáforo de morosidad (query con joins y aggregations).
+- [x] Implementar semáforo de morosidad (query con joins y aggregations).
 - [ ] Implementar generación de recibo PDF.
 - [ ] Implementar reporte mensual con exportación PDF/Excel.
 - [ ] Frontend (Admin): Panel de emisión de cuotas, panel de conciliación de pagos, semáforo de morosidad, reportes.
