@@ -76,3 +76,10 @@
     @apply bg-zinc-300 hover:bg-zinc-400 rounded-full;
   }
 }
+
+@media print {
+  aside,
+  header {
+    display: none !important;
+  }
+}
