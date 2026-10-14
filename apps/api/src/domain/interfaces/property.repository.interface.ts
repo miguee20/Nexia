@@ -35,6 +35,8 @@ export interface IPropertyRepository {
 
   findByIdAndCondominio(id: string, condominio_id: string): Promise<ExtendedPropertyEntity | null>;
   
+  findAllByResident(userId: string, condominio_id: string): Promise<PropertyEntity[]>;
+
   findByIdentificadorAndCondominio(identificador: string, condominio_id: string): Promise<PropertyEntity | null>;
 
   findAllByCondominio(condominio_id: string, filters?: PropertyFilters): Promise<{ data: PropertyEntity[], total: number }>;

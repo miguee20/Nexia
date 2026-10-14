@@ -49,6 +49,17 @@ export class PrismaPropertyRepository implements IPropertyRepository {
     };
   }
 
+  async findAllByResident(userId: string, condominio_id: string): Promise<PropertyEntity[]> {
+    const properties = await prisma.propiedad.findMany({
+      where: {
+        condominio_id,
+        OR: [{ propietario_id: userId }, { inquilino_id: userId }],
+      },
+      orderBy: { identificador: 'asc' },
+    });
+    return properties.map(this.mapToEntity.bind(this));
+  }
+
   async findByIdentificadorAndCondominio(identificador: string, condominio_id: string): Promise<PropertyEntity | null> {
     const property = await prisma.propiedad.findUnique({
       where: {

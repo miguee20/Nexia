@@ -257,6 +257,7 @@ model Pago {
   motivo_rechazo      String?
   fecha_pago          DateTime
   fecha_revision      DateTime?
+  revisado_por_id     String?    @db.Uuid
   createdAt           DateTime   @default(now())
   updatedAt           DateTime   @updatedAt
 

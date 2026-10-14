@@ -13,6 +13,7 @@ import visitRouter from './presentation/routes/visit.routes';
 import deliveryRouter from './presentation/routes/delivery.routes';
 import userRouter from './presentation/routes/user.routes';
 import feeRouter from './presentation/routes/fee.routes';
+import paymentRouter from './presentation/routes/payment.routes';
 import { errorHandler } from './presentation/middlewares/errorHandler';
 
 const app = express();
@@ -22,7 +23,8 @@ app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true,
 }));
-app.use(express.json());
+// Larger limit to allow base64 payment receipts (data URIs)
+app.use(express.json({ limit: '8mb' }));
 app.use(cookieParser());
 
 // Presentation Routes
@@ -37,6 +39,7 @@ app.use('/api/visits', visitRouter);
 app.use('/api/deliveries', deliveryRouter);
 app.use('/api/users', userRouter);
 app.use('/api/finances/fees', feeRouter);
+app.use('/api/finances', paymentRouter);
 
 // Global Error Handler
 app.use(errorHandler);
