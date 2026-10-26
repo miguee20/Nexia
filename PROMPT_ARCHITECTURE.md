@@ -21,12 +21,12 @@ Para garantizar estabilidad y control atómico de commits, **toda fase de desarr
 ```mermaid
 flowchart LR
     B1["Bloque 1:\nBackend Núcleo\n(Dominio + Use Cases Core)"] --> B2["Bloque 2:\nBackend Operativo\n(Transacciones + Pagos + Tests)"]
-    B2 --> B3["Bloque 3:\nFrontend Completo\n(Admin + Residente + UI)"]
+    B2 --> B3["Bloque 3:\nFrontend Completo\n(Admin + Residente + UI + Playwright E2E)"]
 ```
 
 * **Bloque 1: Backend Núcleo:** Capa de Dominio (entidades, errores tipados, interfaces `IRepository`), DTOs Zod, Use Cases principales de negocio y servicios base.
 * **Bloque 2: Backend Operativo / Transaccional / Auditoría:** Casos de uso secundarios, transacciones atómicas (`Prisma.$transaction`), lógica de persistencia, endpoints REST con RBAC y suite de pruebas unitarias con Vitest.
-* **Bloque 3: Frontend (Next.js / shadcn):** Vistas de usuario (Admin, Residente, Guardia), formularios controlados con `react-hook-form` + Zod, diálogo modal y toasts (Sonner), integración HTTP con manejo de errores y microinteracciones.
+* **Bloque 3: Frontend (Next.js / shadcn) + E2E (Playwright POM):** Vistas de usuario (Admin, Residente, Guardia), formularios controlados con `react-hook-form` + Zod, diálogo modal y toasts (Sonner), integración HTTP con manejo de errores, y suite E2E con Playwright bajo Page Object Model (`e2e/pages/*Page.ts` y `e2e/*.spec.ts`).
 
 ---
 
@@ -59,15 +59,17 @@ Cada prompt generado debe seguir religiosamente esta estructura de 7 secciones:
 - Formularios: `react-hook-form` + resolvers Zod.
 - Directivas visuales de diseño: Layout shell (`max-w-7xl mx-auto p-6 md:p-8`), cards blancas (`bg-white border-zinc-200 shadow-sm rounded-xl`), fondos `bg-zinc-50`, sin `alert()` o `confirm()` nativos (usar Shadcn Dialog y Toasts Sonner).
 - Conexión a API (`src/lib/api.ts`).
+- Suite E2E en Playwright: Page Object en `e2e/pages/<Modulo>Page.ts` (locators semánticos `getByRole`, `getByLabel`, `getByText`) y escenarios en `e2e/<modulo>.spec.ts` con mocking de red (`page.route()`) y web-first assertions.
 
 ### 4. REGLAS NEGATIVAS ESTRICTAS (Lo que NO debe hacer)
 - "NO toques apps/web todavía" (si es fase backend).
 - "NO implementes lógica del bloque siguiente".
 - "PROHIBIDO ejecutar git commit por tu cuenta".
+- "PROHIBIDO diseñar tests cosméticos o relajar aserciones solo para que pasen en verde (cero green-washing / cero alucinación en Vitest y Playwright). Si un test falla por un bug de negocio o falta de semántica en el DOM, se debe corregir el código de producción".
 
 ### 5. PUERTAS DE CALIDAD (QA Verification)
 - Ejecución obligatoria de `npm run type-check` en todo el monorepo (0 errores).
-- Tests unitarios con Vitest (`npm test`).
+- Tests unitarios con Vitest (`npm test --workspace=@nexia/api`) y/o pruebas E2E con Playwright (`npm run test:e2e`).
 - Actualización obligatoria de `PROGRESS.md` marcando con `[x]` exclusivamente las tareas concluidas.
 
 ### 6. CRITERIOS DE ENTREGA Y HANDOFF MANUAL
@@ -109,6 +111,11 @@ where: {
 - **Misma sesión/chat:** Mantener el chat abierto entre los bloques 1, 2 y 3 de una misma fase para que el modelo conserve el contexto fresco de los DTOs y tipos de TypeScript recién generados.
 - **Nueva sesión/chat:** Al finalizar una fase completa (después de merge a `main` y validación de árbol limpio), se debe iniciar un chat nuevo para la siguiente fase.
 
+### F. Integridad de Pruebas (Vitest & Playwright) — Cero "Green-Washing" y Cero Alucinación
+- **Doble Cobertura por Fase:** Todo bloque de Backend valida su lógica con **Vitest** (`apps/api`) y todo bloque de Frontend valida sus flujos de usuario con **Playwright** (`e2e/`) bajo arquitectura **Page Object Model (POM)**.
+- **Prohibido hacer tests diseñados solo para pasar en verde:** Los tests nunca deben adaptarse a código defectuoso ni usar aserciones superficiales. Deben verificar invariantes reales: filtrado por `condominio_id`, cálculos exactos, lanzamiento de `DomainError` específicos en casos de rechazo, payloads HTTP reales interceptados con `page.route()` y cambios visibles en el DOM mediante locators semánticos (`getByRole`, `getByLabel`, `getByText`).
+- **Corrección en el código fuente:** Si una prueba falla porque un componente no expone roles accesibles o un caso de uso omite una regla, el agente está obligado a corregir el componente o caso de uso, jamás a debilitar el test.
+
 ---
 
 ## 4. Estado Actual del Proyecto y Hoja de Ruta
@@ -119,8 +126,9 @@ A la fecha, el avance registrado en `PROGRESS.md` es el siguiente:
 - [x] **Fase 1:** Autenticación, Tenants y Modelo Base (11/11 completadas)
 - [x] **Fase 2:** Propiedades, Residentes, Vehículos y Marbetes (10/10 completadas)
 - [x] **Fase 3:** Garita, Pases QR, Alertas Delivery y Fallback (19/19 completadas)
-- [ ] **Fase 4: Módulo Financiero (Siguiente Fase Activa)** (0/11 completadas)
-- [ ] **Fase 5:** Módulo de Amenidades (0/6 completadas)
+- [x] **Fase 4:** Módulo Financiero (11/11 completadas)
+- [x] **Pausa Técnica QA:** Suite E2E con Playwright y Page Object Model (4/4 completadas)
+- [ ] **Fase 5: Módulo de Amenidades (Siguiente Fase Activa)** (0/6 completadas)
 - [ ] **Fase 6:** Notificaciones, Pulido y Documentación (0/8 completadas)
 - [ ] **Fase 7:** Despliegue, Demo y Portafolio (0/8 completadas)
 
@@ -170,8 +178,9 @@ Implementa las siguientes tareas respetando [Clean Architecture / UI Design Syst
 4. **[Capa de Presentación / Rutas]:**
    - Endpoints REST con método, URI y middlewares de RBAC.
 
-5. **Pruebas y Verificación:**
-   - Tests unitarios con Vitest para: [Casos críticos de éxito y error].
+5. **Pruebas y Verificación (Vitest / Playwright POM — Cero Green-Washing):**
+   - [Si es Backend]: Tests unitarios con Vitest validando contratos, aislamiento `condominio_id`, casos de éxito y errores de dominio reales.
+   - [Si es Frontend]: Page Object en `e2e/pages/*Page.ts` y suite E2E en `e2e/*.spec.ts` con Playwright (`getByRole`/`getByLabel`, `page.route()`, web-first assertions). Prohibido relajar tests para forzar el verde; si falla por código o semántica, corregir la implementación.
 
 ---
 
@@ -184,7 +193,7 @@ Implementa las siguientes tareas respetando [Clean Architecture / UI Design Syst
 
 ### 4. CRITERIOS DE ENTREGA:
 - `npm run type-check` pasando con 0 errores en todos los workspaces.
-- Tests unitarios en verde (`npm test`).
+- Tests en verde con validación real de contratos (`npm test --workspace=@nexia/api` en Backend / `npm run test:e2e` con Playwright en Frontend).
 - `PROGRESS.md` actualizado con las casillas completadas marcadas con `[x]`.
 - Comando `git commit -m "..."` sugerido en inglés bajo Conventional Commits para ejecución manual del desarrollador.
 ```

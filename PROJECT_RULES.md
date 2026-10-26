@@ -80,6 +80,21 @@ Toda vista, componente o modal nuevo o modificado **debe funcionar perfectamente
 - **Precisión Matemática:** Queda estrictamente prohibido utilizar floats nativos de JavaScript (ej. `0.1 + 0.2`) para cálculos monetarios. Todo manejo de dinero en el backend debe hacerse utilizando tipos `Decimal` de Prisma y la librería `decimal.js` (o manejo en centavos exactos).
 - **Atomicidad (All-or-Nothing):** Todo flujo que involucre creación de pagos, alteración de balances o cambio de estados de cuotas DEBE ejecutarse dentro de una transacción (`Prisma.$transaction`). Si falla una actualización (ej. recibo), todo el pago debe revertirse automáticamente.
 
+### 1.7 Estrategia de Testing y Estándares de QA (Vitest + Playwright)
+Cada módulo o fase del proyecto debe contar obligatoriamente con doble cobertura de pruebas automatizadas:
+1. **Pruebas Unitarias y de Aplicación (`Vitest` en `apps/api`):**
+   - Validan casos de uso (`use-cases`), reglas de dominio, cálculos financieros, control de concurrencia y middlewares en aislamiento.
+2. **Pruebas End-to-End (`Playwright` en `e2e/`):**
+   - Todo bloque de Frontend debe incluir su correspondiente **Page Object Model** (`e2e/pages/*Page.ts`) y suite de pruebas E2E (`e2e/*.spec.ts`).
+   - **Locators Semánticos Obligatorios:** Prohibido usar selectores CSS frágiles (`div > span`, clases de Tailwind) o XPath. Usar exclusivamente `getByRole`, `getByLabel`, `getByText` y `getByPlaceholder`.
+   - **Web-First Assertions:** Usar aserciones asíncronas con auto-waiting nativo (`await expect(locator).toBeVisible()`, `toContainText()`, `toHaveURL()`). Prohibido usar `page.waitForTimeout()`.
+   - **Aislamiento de Red:** Usar `page.route()` para interceptar y validar peticiones/respuestas HTTP contra la API sin depender de que PostgreSQL en Docker esté activo durante la ejecución de pruebas de UI.
+3. **Integridad de las Pruebas — Prohibición Estricta de "Green-Washing" y Alucinaciones:**
+   - **Prohibido diseñar tests para que "pasen en verde" artificialmente:** Queda terminantemente prohibido escribir aserciones débiles, tautológicas (`expect(true).toBe(true)`), mockear la misma unidad bajo prueba, omitir validaciones de argumentos reales o modificar/suavizar un test cuando falla para forzar que pase.
+   - **La prueba audita al código, no al revés:** Las pruebas deben diseñarse estrictamente a partir de los requisitos de negocio, contratos tipados (`@nexia/shared-types`), aislamiento multi-tenant (`condominio_id`) y accesibilidad semántica real del DOM.
+   - **Corrección en la Fuente:** Si un test unitario o E2E falla porque el caso de uso no valida un borde, un endpoint devuelve un contrato distinto o un componente UI carece de roles accesibles (`role`, `aria-label`, `Label htmlFor`), **se debe corregir el código de producción**, nunca debilitar ni trucar el test.
+   - **Verificación de Contratos y Efectos:** En Vitest se debe asertar no solo que la función resuelva o lance un `DomainError` específico, sino también que los repositorios/transacciones hayan sido invocados con los parámetros exactos esperados (incluyendo `condominio_id`). En Playwright se debe verificar tanto la petición enviada (método/payload cuando aplique) como la reacción visual real en la interfaz.
+
 ---
 
 ## 2. Reglas de Git, Commits y Código
@@ -137,6 +152,8 @@ Toda vista, componente o modal nuevo o modificado **debe funcionar perfectamente
 2. **Validación Previa a Commit:**
    - Antes de sugerir un commit o dar por concluido un bloque de tareas, el código debe compilar y verificarse:
      * `npm run type-check` (sin errores de TypeScript).
+     * `npm test --workspace=@nexia/api` (pruebas unitarias en Vitest pasando con aserciones reales de negocio).
+     * `npm run test:e2e` (pruebas E2E en Playwright pasando cuando el bloque incluya cambios o nuevas vistas de Frontend).
      * `npm run build` o `npm run lint` (sin advertencias ni fallos).
 3. **Gestión de Progreso:**
    - El avance se registra exclusivamente marcando las casillas correspondientes en `PROGRESS.md`.

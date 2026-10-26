@@ -41,6 +41,8 @@ apps/api/prisma/generated/
 # ─── Testing ─────────────────────────────────────────────────────────────────
 coverage/
 .nyc_output/
+playwright-report/
+test-results/
 
 # ─── Editors & OS ────────────────────────────────────────────────────────────
 .DS_Store

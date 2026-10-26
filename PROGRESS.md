@@ -12,6 +12,7 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 - [x] **Fase 3: Módulo de Garita, Pases QR, Alertas de Delivery y Fallback** (19 / 19 completadas)
 - [x] **Refactor UI/UX: Rediseño Estético B2B y Adaptabilidad Full Responsive** (Tokens, Shell, Pantallas y Mobile)
 - [x] **Fase 4: Módulo Financiero** (11 / 11 completadas)
+- [x] **Pausa Técnica QA: Suite E2E con Playwright y Page Object Model** (4 / 4 completadas)
 - [ ] **Fase 5: Módulo de Amenidades** (0 / 6 completadas)
 - [ ] **Fase 6: Notificaciones, Pulido y Documentación** (0 / 8 completadas)
 - [ ] **Fase 7: Despliegue, Demo y Portafolio** (0 / 8 completadas)
@@ -185,6 +186,17 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 
 ---
 
+## Pausa Técnica QA — Suite E2E con Playwright y Page Object Model
+- **Objetivo:** Establecer una suite limpia, minimalista y aislada de pruebas End-to-End (E2E) aplicando patrones de QA Engineering (Page Object Model, locators semánticos, web-first assertions y mocking de red con `page.route()`) sin acoplar el entorno a la base de datos ni interferir con Vitest o Next.js.
+- **Entregable:** Configuración centralizada en `playwright.config.ts`, Page Object tipado (`e2e/pages/LoginPage.ts`) y escenarios E2E de autenticación y redirección (`e2e/login.spec.ts`).
+
+- [x] Instalar `@playwright/test` en la raíz del monorepo y configurar `playwright.config.ts` (Chromium desktop, trace/screenshot en fallo, reutilización de `webServer`).
+- [x] Agregar scripts `test:e2e`, `test:e2e:ui` y `test:e2e:report` en el `package.json` raíz.
+- [x] Implementar `LoginPage` bajo arquitectura Page Object Model (`e2e/pages/LoginPage.ts`) con locators semánticos (`getByRole`, `getByLabel`, `getByText`).
+- [x] Implementar suite `e2e/login.spec.ts` cubriendo renderizado UI (smoke), error 401 mockeado, login exitoso 200 con redirección a `/dashboard` y redirección automática desde `/`.
+
+---
+
 ## Fase 5 — Módulo de Amenidades
 - **Objetivo:** Proporcionar un sistema dinámico de gestión de áreas comunes con control de reservas, verificación de solvencia del residente y prevención estricta de solapamientos horarios.
 - **Entregable:** El Admin crea amenidades dinámicas y gestiona el calendario; el residente reserva con validación automática de no-morosidad y control de concurrencia ACID.
@@ -195,7 +207,7 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 - [ ] Implementar calendario de reservas.
 - [ ] Frontend (Admin): Gestión de amenidades y vista de calendario.
 - [ ] Frontend (Residente): Ver amenidades disponibles, crear reserva, ver mis reservas.
-- [ ] Tests: Concurrencia en reservas (dos residentes al mismo tiempo), bloqueo por morosidad.
+- [ ] Tests: Concurrencia en reservas (dos residentes al mismo tiempo), bloqueo por morosidad (Vitest) y flujos E2E de gestión/reserva de amenidades (Playwright POM).
 
 ---
 
@@ -208,7 +220,7 @@ Este documento constituye la bitácora activa de seguimiento del proyecto. Cada 
 - [ ] Disparar notificaciones automáticas en eventos clave (cuota emitida, pago aprobado/rechazado, etc.).
 - [ ] Configurar Swagger/OpenAPI con documentación de todos los endpoints.
 - [ ] Implementar Rate Limiting en endpoints sensibles.
-- [ ] Frontend: Componente de notificaciones (campana + dropdown).
+- [ ] Frontend: Componente de notificaciones (campana + dropdown) + tests E2E con Playwright POM.
 - [ ] Frontend: Modo oscuro / claro.
 - [ ] Frontend: Responsive final (mobile-first para vista de garita).
 - [ ] README.md profesional: badges, screenshots, diagrama de arquitectura, guía de instalación, link a demo, credenciales demo.
